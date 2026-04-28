@@ -419,7 +419,8 @@ export default function WriteReview() {
 
             {step === TOTAL_STEPS && (
               <div className={styles.anonBlock}>
-                <p className={styles.anonNote}>This is anonymous. Nothing here is shared with your employer.</p>
+                <p className={styles.anonNote}>Your identity stays private. Your review will be published anonymously.</p>
+                <p className={styles.anonSubnote}>Name, email, password, and verification details are never shown publicly or shared with your employer.</p>
                 <p className={styles.anonSubnote}>You're helping someone avoid a bad situation — or find a good one.</p>
               </div>
             )}
