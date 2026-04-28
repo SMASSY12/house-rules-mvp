@@ -1,0 +1,210 @@
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  padding: 32px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.restaurant {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  line-height: 1.25;
+}
+
+.location {
+  font-size: 0.8125rem;
+  color: var(--color-text-faint);
+  letter-spacing: 0;
+}
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.ratingLabel {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: -0.01em;
+}
+
+.roleLine {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+}
+
+.role {
+  font-weight: 500;
+}
+
+.dot {
+  color: var(--color-border);
+  font-size: 0.9em;
+}
+
+.quickTake {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--color-text);
+  line-height: 1.78;
+  letter-spacing: -0.005em;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.voiceLine {
+  font-size: 0.6875rem;
+  color: var(--color-text-faint);
+  letter-spacing: 0.01em;
+  margin-bottom: 12px;
+}
+
+.primaryTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.5;
+  border: 1px solid transparent;
+  border-left-width: 2px;
+}
+
+.good {
+  background: var(--color-signal-good-bg);
+  color: var(--color-signal-good);
+  border-color: var(--color-signal-good-border);
+  border-left-color: var(--color-signal-good);
+}
+
+.bad {
+  background: var(--color-signal-bad-bg);
+  color: var(--color-signal-bad);
+  border-color: var(--color-signal-bad-border);
+  border-left-color: var(--color-signal-bad);
+}
+
+.neutral {
+  background: var(--color-signal-neutral-bg);
+  color: var(--color-signal-neutral);
+  border-color: var(--color-signal-neutral-border);
+  border-left-color: #9ca3af;
+}
+
+.expandedSignals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 10px;
+  margin-top: 2px;
+  border-top: 1px solid var(--color-border-subtle);
+  margin-bottom: 10px;
+}
+
+.signalsBtn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--color-text-faint);
+  cursor: pointer;
+  transition: color 0.15s;
+  margin-bottom: 8px;
+}
+
+.signalsBtn:hover {
+  color: var(--color-text-muted);
+}
+
+.contextTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-faint);
+  background: transparent;
+  border: 1px solid var(--color-border-subtle);
+  letter-spacing: 0;
+}
+
+.fullReview {
+  border-left: 2px solid var(--color-border);
+  padding: 2px 0 2px 16px;
+  margin-bottom: 20px;
+}
+
+.fullReview p {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  line-height: 1.85;
+  letter-spacing: -0.005em;
+}
+
+.expandBtn {
+  align-self: flex-start;
+  margin-top: auto;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.expandBtn:hover {
+  color: var(--color-text);
+}
