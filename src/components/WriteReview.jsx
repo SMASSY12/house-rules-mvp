@@ -58,11 +58,6 @@ const signalGroups = [
         ],
         tag: 'Feedback Response',
       },
-      {
-        id: 'management_stress',
-        text: 'How did management usually handle stressful shifts?',
-        options: ['Calm and supportive', 'Mixed', 'Disorganized', 'Blamed staff'],
-      },
     ],
   },
   {
@@ -110,8 +105,8 @@ const signalGroups = [
     questions: [
       {
         id: 'shift_meal',
-        text: 'Were shift meals provided?',
-        options: ['Always', 'Sometimes', 'Rarely', 'Never'],
+        text: 'What\'s the meal policy?',
+        options: ['Free shift meal', 'Discounted meal', 'Limited/conditional', 'No meal provided', 'Other'],
       },
       {
         id: 'uniforms',
@@ -133,11 +128,6 @@ const signalGroups = [
         id: 'substance_use',
         text: 'Did you observe substance use during shifts?',
         options: ['Never', 'Occasionally', 'Regularly'],
-      },
-      {
-        id: 'team_support',
-        text: 'How supportive was the team day to day?',
-        options: ['Very supportive', 'Mixed', 'Competitive or divided', 'Not sure'],
       },
       {
         id: 'turnover',
