@@ -174,7 +174,7 @@ const signalGroups = [
         id: 'offDayCommunication',
         text: 'Are you expected to respond to work messages on your time off?',
         options: ['No, never expected', 'Occasionally', 'Often expected', 'Yes, consistently expected'],
-        microcopy: 'This is about contact outside work hours — calls, texts, and expectations to be available when you\'re not on the clock. Not about alcohol or drug policies.',
+        microcopy: 'This is about contact outside work hours — calls, texts, and expectations to be available when you\'re not on the clock.',
       },
       {
         id: 'sideWorkLoad',
