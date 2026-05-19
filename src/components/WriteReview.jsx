@@ -48,6 +48,11 @@ const signalGroups = [
         tooltip: 'Includes feedback, acknowledgment, or small gestures from management or coworkers.',
       },
       {
+        id: 'safe_to_speak_up',
+        text: 'Did you feel comfortable raising concerns or giving feedback?',
+        options: ['Always', 'Usually', 'Sometimes', 'Rarely', 'Never'],
+      },
+      {
         id: 'feedback_response',
         text: 'How did management typically respond to feedback or concerns?',
         options: [
@@ -151,9 +156,38 @@ const signalGroups = [
         options: ['Supportive and present', 'Steps in when needed', 'Visible but reactive', 'Distant or unavailable', 'Adds pressure or blame'],
       },
       {
+        id: 'management_attrition',
+        text: 'How often did management change during your time here?',
+        options: [
+          'Rarely — same team throughout',
+          'Some turnover but stable overall',
+          'Frequent changes',
+          'Constant turnover',
+          'Not sure',
+        ],
+      },
+      {
         id: 'teamEnvironment',
         text: 'How would you describe the overall team environment?',
         options: ['Collaborative and supportive', 'Mostly positive', 'Mixed depending on shift', 'Tense or cliquey', 'Competitive or toxic'],
+      },
+      {
+        id: 'staff_culture',
+        text: 'How would you describe the culture among staff here?',
+        options: ['Collaborative and tight-knit', 'Mostly positive', 'Mixed depending on the shift', 'Cliquey or divided', 'Toxic or hostile'],
+      },
+      {
+        id: 'fair_treatment',
+        text: 'How fairly were all team members treated here?',
+        options: [
+          'Everyone held to the same standard',
+          'Some favoritism existed',
+          'Clear in-group / out-group dynamics',
+          'Bullying or intimidation was present',
+          'Discrimination or harassment was present',
+          'Not sure',
+        ],
+        other: true,
       },
     ],
   },
