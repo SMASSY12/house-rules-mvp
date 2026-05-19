@@ -592,6 +592,13 @@
   margin-bottom: 28px;
 }
 
+.questionMicrocopy {
+  font-size: 0.8125rem;
+  color: var(--color-text-faint);
+  letter-spacing: -0.005em;
+  line-height: 1.5;
+}
+
 .groupHint {
   font-size: 0.75rem;
   font-style: italic;

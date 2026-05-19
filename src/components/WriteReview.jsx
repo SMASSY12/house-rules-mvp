@@ -57,6 +57,7 @@ const signalGroups = [
           'Discouraged or punished speaking up',
         ],
         tag: 'Feedback Response',
+        microcopy: 'Safe to speak up is about how you felt. This is about what happened when you did.',
       },
     ],
   },
@@ -93,11 +94,6 @@ const signalGroups = [
         text: 'How clean was the workplace?',
         options: ['Very clean', 'Mostly clean', 'Mixed', 'Often not clean'],
       },
-      {
-        id: 'safety',
-        text: 'Did the workplace feel safe and respectful?',
-        options: ['Always', 'Usually', 'Sometimes', 'Often not'],
-      },
     ],
   },
   {
@@ -126,7 +122,7 @@ const signalGroups = [
       },
       {
         id: 'substance_use',
-        text: 'Did you observe substance use during shifts?',
+        text: 'Did coworkers or managers drink or use drugs on the job?',
         options: ['Never', 'Occasionally', 'Regularly'],
       },
       {
@@ -178,6 +174,7 @@ const signalGroups = [
         id: 'offDayCommunication',
         text: 'Are you expected to respond to work messages on your time off?',
         options: ['No, never expected', 'Occasionally', 'Often expected', 'Yes, consistently expected'],
+        microcopy: 'This is about contact outside work hours — calls, texts, and expectations to be available when you\'re not on the clock. Not about alcohol or drug policies.',
       },
       {
         id: 'sideWorkLoad',
@@ -193,11 +190,6 @@ const signalGroups = [
         id: 'recommend',
         text: 'Would you recommend working here to someone you know?',
         options: ['Yes', 'Depends', 'No'],
-      },
-      {
-        id: 'why_leave',
-        text: 'Why did people typically leave?',
-        options: ['Better opportunity', 'Burnout', 'Management issues', 'Pay or tip issues', 'Scheduling', 'Not sure'],
       },
     ],
   },
@@ -309,6 +301,7 @@ export default function WriteReview() {
                               </span>
                             )}
                           </div>
+                          {q.microcopy && <p className={styles.questionMicrocopy}>{q.microcopy}</p>}
                           <div className={styles.pillGroupWrap}>
                             {q.options.map(opt => (
                               <button
