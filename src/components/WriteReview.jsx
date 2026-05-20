@@ -138,7 +138,19 @@ const signalGroups = [
           'Not sure',
         ],
       },
-      // management_communication goes here (separate task)
+      {
+        id: 'management_communication',
+        text: 'How does management prefer to communicate with staff?',
+        options: [
+          'Group text',
+          'Communication app (Slack, Teams, etc.)',
+          'Group email',
+          'In person / verbal only',
+          'Whiteboard / physical board',
+          'Other',
+        ],
+        multiSelect: true,
+      },
       {
         id: 'recognition',
         text: 'How often were you recognized or appreciated for your work?',
