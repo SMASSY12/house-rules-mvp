@@ -243,6 +243,16 @@ export default function WriteReview() {
     setAnswers(prev => ({ ...prev, [id]: value }))
   }
 
+  function toggleMultiAnswer(id, value) {
+    setAnswers(prev => {
+      const current = Array.isArray(prev[id]) ? prev[id] : []
+      const next = current.includes(value)
+        ? current.filter(v => v !== value)
+        : [...current, value]
+      return { ...prev, [id]: next }
+    })
+  }
+
   function nextStep() { setStep(s => s + 1) }
   function prevStep() { setStep(s => Math.max(s - 1, 1)) }
 
@@ -353,8 +363,13 @@ export default function WriteReview() {
                                       <button
                                         key={opt}
                                         type="button"
-                                        className={`${styles.pill} ${answers[q.id] === opt ? styles.pillActive : ''}`}
-                                        onClick={() => setAnswer(q.id, opt)}
+                                        className={`${styles.pill} ${
+                                          (q.multiSelect
+                                            ? Array.isArray(answers[q.id]) && answers[q.id].includes(opt)
+                                            : answers[q.id] === opt)
+                                            ? styles.pillActive : ''
+                                        }`}
+                                        onClick={() => q.multiSelect ? toggleMultiAnswer(q.id, opt) : setAnswer(q.id, opt)}
                                       >
                                         {opt}
                                       </button>
@@ -397,8 +412,13 @@ export default function WriteReview() {
                                 <button
                                   key={opt}
                                   type="button"
-                                  className={`${styles.pill} ${answers[q.id] === opt ? styles.pillActive : ''}`}
-                                  onClick={() => setAnswer(q.id, opt)}
+                                  className={`${styles.pill} ${
+                                    (q.multiSelect
+                                      ? Array.isArray(answers[q.id]) && answers[q.id].includes(opt)
+                                      : answers[q.id] === opt)
+                                      ? styles.pillActive : ''
+                                  }`}
+                                  onClick={() => q.multiSelect ? toggleMultiAnswer(q.id, opt) : setAnswer(q.id, opt)}
                                 >
                                   {opt}
                                 </button>
