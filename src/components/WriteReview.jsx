@@ -279,8 +279,7 @@ export default function WriteReview() {
         ) : (
           <>
           <div className={styles.header}>
-            <p className={styles.eyebrow}>Share your experience</p>
-            <h2 className={styles.title}>Tell people what it was really like.</h2>
+            <h2 className={styles.title}>Tell other professionals what it was really like.</h2>
             <p className={styles.subtitle}>
               Your words. Your voice. The real story others need to hear.
             </p>
@@ -292,9 +291,9 @@ export default function WriteReview() {
             </p>
 
             {step === 1 && (
-              <fieldset className={styles.fieldset}>
-                <legend className={styles.legend}>The Workplace</legend>
-                <p className={styles.stepPurpose}>Help someone understand what it's really like before they take the job.</p>
+              <>
+                <p className={styles.retaliationNote}>Your name never appears on your review.</p>
+                <fieldset className={styles.fieldset}>
                 <div className={styles.fields}>
                   <div className={styles.field}>
                     <label className={styles.label}>Workplace name</label>
@@ -360,6 +359,7 @@ export default function WriteReview() {
                   </div>
                 </div>
               </fieldset>
+              </>
             )}
 
             {step === 2 && (

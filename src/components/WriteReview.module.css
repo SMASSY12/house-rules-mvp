@@ -660,6 +660,13 @@
   letter-spacing: -0.005em;
 }
 
+.retaliationNote {
+  font-size: 0.8125rem;
+  color: var(--color-text-faint);
+  letter-spacing: -0.005em;
+  margin-bottom: 16px;
+}
+
 @media (max-width: 600px) {
   .fieldRow {
     grid-template-columns: 1fr;
