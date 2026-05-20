@@ -339,6 +339,25 @@ export default function WriteReview() {
                       <p className={styles.fieldHelper}>Approximate is completely fine.</p>
                     </div>
                   </div>
+                  <div className={styles.field}>
+                    <label className={styles.label}>When did you work there?</label>
+                    <div className={styles.selectWrap}>
+                      <select
+                        className={styles.select}
+                        value={answers.employment_period ?? ''}
+                        onChange={e => setAnswer('employment_period', e.target.value)}
+                      >
+                        <option value="" disabled>Select…</option>
+                        <option>Within the last 6 months</option>
+                        <option>6 months – 1 year ago</option>
+                        <option>1–2 years ago</option>
+                        <option>2–5 years ago</option>
+                        <option>More than 5 years ago</option>
+                        <option>Still working there</option>
+                      </select>
+                    </div>
+                    <p className={styles.fieldHelper}>This helps others know how recent your experience is.</p>
+                  </div>
                 </div>
               </fieldset>
             )}
