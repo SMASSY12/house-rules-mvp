@@ -516,7 +516,7 @@ export default function WriteReview() {
                 <div className={styles.verifySection}>
                   <label className={styles.label}>How would you like to verify your connection to this workplace?</label>
                   <p className={styles.verifyHelper}>
-                    Helps keep reviews credible and protects workers from fake submissions.
+                    Helps keep reviews credible. We'll automatically remove your private information — we only need to see your name and employer name.
                   </p>
                   <div className={styles.selectWrap}>
                     <select
@@ -525,6 +525,7 @@ export default function WriteReview() {
                       onChange={e => setVerification(e.target.value)}
                     >
                       <option value="" disabled>Select a method…</option>
+                      <option value="w2">Upload a W2 or tax document</option>
                       <option value="proof">Upload proof of employment</option>
                       <option value="paystub">Link to schedule or paystub</option>
                       <option value="email">Verify via email domain</option>
