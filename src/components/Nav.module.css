@@ -23,6 +23,7 @@
   font-size: 1.1875rem;
   color: var(--color-text);
   letter-spacing: -0.015em;
+  text-decoration: none;
 }
 
 .links {

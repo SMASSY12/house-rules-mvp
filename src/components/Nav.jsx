@@ -37,7 +37,7 @@ export default function Nav() {
   return (
     <header className={styles.nav}>
       <div className={styles.inner}>
-        <span className={styles.wordmark}>House Rules</span>
+        <a href="/" className={styles.wordmark}>House Rules</a>
         <nav className={styles.links}>
           <a href="#how-it-works">How it works</a>
 
