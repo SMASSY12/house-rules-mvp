@@ -1,13 +1,25 @@
-import { useState } from 'react'
+import { useState, Fragment } from 'react'
 import styles from './WriteReview.module.css'
 
 const TOTAL_STEPS = 4
 const STEP_LABELS = ['The Workplace', 'Core Signals', 'In Your Words', 'Account + Identity']
 
+const TOP_10_IDS = new Set([
+  'pay_consistency',
+  'tip_transparency',
+  'management',
+  'managementUnderPressure',
+  'turnover',
+  'staff_culture',
+  'turnoverReason',
+  'scheduling',
+  'safe_to_speak_up',
+  'fair_treatment',
+])
+
 const signalGroups = [
   {
-    heading: 'Pay & Transparency',
-
+    heading: 'The money',
     questions: [
       {
         id: 'pay_consistency',
@@ -20,32 +32,60 @@ const signalGroups = [
         options: ['Very clear', 'Mostly clear', 'Mixed', 'Often unclear', 'Not applicable'],
       },
       {
-        id: 'benefits',
-        text: 'Did you receive any benefits?',
-        options: ['Yes', 'No', 'Not sure'],
+        id: 'off_clock',
+        text: 'Were there times people worked without being paid?',
+        options: ['Never', 'Rarely', 'Sometimes', 'Often'],
       },
     ],
   },
   {
-    heading: 'Management & Fairness',
-
+    heading: 'Day to day',
     questions: [
+      {
+        id: 'scheduling',
+        text: 'How would you describe scheduling?',
+        options: ['Consistent', 'Somewhat predictable', 'Often changed', 'Last-minute / chaotic'],
+      },
       {
         id: 'shift_fairness',
         text: 'How fair were shift or section assignments?',
         options: ['Very fair', 'Mostly fair', 'Mixed', 'Often unfair'],
       },
       {
+        id: 'offDayCommunication',
+        text: 'Are you expected to respond to work messages on your time off?',
+        options: ['No, never expected', 'Occasionally', 'Often expected', 'Yes, consistently expected'],
+        microcopy: 'This is about contact outside work hours — calls, texts, and expectations to be available when you\'re not on the clock.',
+      },
+      {
+        id: 'training',
+        text: 'How well were you trained for your role?',
+        options: ['Very well', 'Adequately', 'Minimal training', 'Thrown in'],
+      },
+      {
+        id: 'timeOffProcess',
+        text: 'How is time off typically handled?',
+        options: ['Easy to request and approve', 'Request in advance (generally respected)', 'Must find shift coverage', 'Difficult to get approved', 'Not sure'],
+      },
+      {
+        id: 'sideWorkLoad',
+        text: 'How would you describe side work expectations?',
+        options: ['Minimal', 'Moderate and fair', 'Depends on section/shift', 'Heavy workload', 'Excessive'],
+      },
+    ],
+  },
+  {
+    heading: 'The people',
+    questions: [
+      {
         id: 'management',
         text: 'How would you describe management overall?',
         options: ['Supportive', 'Mixed', 'Disorganized', 'Toxic'],
       },
       {
-        id: 'recognition',
-        text: 'How often were you recognized or appreciated for your work?',
-        options: ['Regularly', 'Occasionally', 'Rarely', 'Never'],
-        tag: 'Recognition',
-        tooltip: 'Includes feedback, acknowledgment, or small gestures from management or coworkers.',
+        id: 'managementUnderPressure',
+        text: 'How does management typically behave during busy or high-stress shifts?',
+        options: ['Supportive and present', 'Steps in when needed', 'Visible but reactive', 'Distant or unavailable', 'Adds pressure or blame'],
       },
       {
         id: 'safe_to_speak_up',
@@ -63,113 +103,6 @@ const signalGroups = [
         ],
         tag: 'Feedback Response',
         microcopy: 'Safe to speak up is about how you felt. This is about what happened when you did.',
-      },
-    ],
-  },
-  {
-    heading: 'Work Expectations',
-    questions: [
-      {
-        id: 'off_clock',
-        text: 'Were there times people worked without being paid?',
-        options: ['Never', 'Rarely', 'Sometimes', 'Often'],
-      },
-      {
-        id: 'scheduling',
-        text: 'How would you describe scheduling?',
-        options: ['Consistent', 'Somewhat predictable', 'Often changed', 'Last-minute / chaotic'],
-      },
-      {
-        id: 'training',
-        text: 'How well were you trained for your role?',
-        options: ['Very well', 'Adequately', 'Minimal training', 'Thrown in'],
-      },
-      {
-        id: 'growth',
-        text: 'Were there real opportunities to grow or advance?',
-        options: ['Yes', 'Somewhat', 'No', 'Not sure'],
-      },
-    ],
-  },
-  {
-    heading: 'Work Environment',
-    questions: [
-      {
-        id: 'cleanliness',
-        text: 'How clean was the workplace?',
-        options: ['Very clean', 'Mostly clean', 'Mixed', 'Often not clean'],
-      },
-    ],
-  },
-  {
-    heading: 'Operations',
-    questions: [
-      {
-        id: 'shift_meal',
-        text: 'What\'s the meal policy?',
-        options: ['Free shift meal', 'Discounted meal', 'Limited/conditional', 'No meal provided', 'Other'],
-      },
-      {
-        id: 'uniforms',
-        text: 'Were uniforms or dress expectations reasonable?',
-        options: ['Yes', 'Somewhat', 'No'],
-      },
-    ],
-  },
-  {
-    heading: 'Culture',
-
-    questions: [
-      {
-        id: 'guest_culture',
-        text: 'What was guest culture like?',
-        options: ['Respectful / professional', 'Mixed', 'Often difficult'],
-      },
-      {
-        id: 'substance_use',
-        text: 'Did coworkers or managers drink or use drugs on the job?',
-        options: ['Never', 'Occasionally', 'Regularly'],
-      },
-      {
-        id: 'turnover',
-        text: 'How would you describe staff turnover?',
-        options: ['Low', 'Average', 'High', 'Not sure'],
-      },
-    ],
-  },
-  {
-    heading: 'Workplace Reality',
-    questions: [
-      {
-        id: 'turnoverReason',
-        text: 'Why do people typically leave this workplace?',
-        options: ['Better opportunities elsewhere', 'Management issues', 'Pay or tip concerns', 'Scheduling or hours', 'High stress or burnout', 'Conflict with team', 'Not sure'],
-      },
-      {
-        id: 'employeeTenure',
-        text: 'How long do most employees tend to stay?',
-        options: ['Less than 3 months', '3–6 months', '6–12 months', '1+ year', 'Not sure'],
-      },
-      {
-        id: 'managementUnderPressure',
-        text: 'How does management typically behave during busy or high-stress shifts?',
-        options: ['Supportive and present', 'Steps in when needed', 'Visible but reactive', 'Distant or unavailable', 'Adds pressure or blame'],
-      },
-      {
-        id: 'management_attrition',
-        text: 'How often did management change during your time here?',
-        options: [
-          'Rarely — same team throughout',
-          'Some turnover but stable overall',
-          'Frequent changes',
-          'Constant turnover',
-          'Not sure',
-        ],
-      },
-      {
-        id: 'teamEnvironment',
-        text: 'How would you describe the overall team environment?',
-        options: ['Collaborative and supportive', 'Mostly positive', 'Mixed depending on shift', 'Tense or cliquey', 'Competitive or toxic'],
       },
       {
         id: 'staff_culture',
@@ -189,31 +122,90 @@ const signalGroups = [
         ],
         other: true,
       },
+      {
+        id: 'boh_foh_dynamic',
+        text: 'What was the relationship like between front and back of house?',
+        options: ['Collaborative and respectful', 'Mostly fine, occasional friction', 'Mixed — depended on the shift', 'Frequently tense', 'Always a problem', 'Not sure'],
+      },
+      {
+        id: 'management_attrition',
+        text: 'How often did management change during your time here?',
+        options: [
+          'Rarely — same team throughout',
+          'Some turnover but stable overall',
+          'Frequent changes',
+          'Constant turnover',
+          'Not sure',
+        ],
+      },
+      // management_communication goes here (separate task)
+      {
+        id: 'recognition',
+        text: 'How often were you recognized or appreciated for your work?',
+        options: ['Regularly', 'Occasionally', 'Rarely', 'Never'],
+        tag: 'Recognition',
+        microcopy: 'Includes feedback, acknowledgment, or small gestures from management or coworkers.',
+      },
     ],
   },
   {
-    heading: 'Operations & Expectations',
+    heading: 'The place',
     questions: [
+      {
+        id: 'guest_culture',
+        text: 'What was guest culture like?',
+        options: ['Respectful / professional', 'Mixed', 'Often difficult'],
+      },
+      {
+        id: 'substance_use',
+        text: 'Did coworkers or managers drink or use drugs on the job?',
+        options: ['Never', 'Occasionally', 'Regularly'],
+      },
+      {
+        id: 'cleanliness',
+        text: 'How clean was the workplace?',
+        options: ['Very clean', 'Mostly clean', 'Mixed', 'Often not clean'],
+      },
+      {
+        id: 'growth',
+        text: 'Were there real opportunities to grow or advance?',
+        options: ['Yes', 'Somewhat', 'No', 'Not sure'],
+      },
+      {
+        id: 'turnover',
+        text: 'How would you describe staff turnover?',
+        options: ['Low', 'Average', 'High', 'Not sure'],
+      },
+      {
+        id: 'turnoverReason',
+        text: 'Why do people typically leave this workplace?',
+        options: ['Better opportunities elsewhere', 'Management issues', 'Pay or tip concerns', 'Scheduling or hours', 'High stress or burnout', 'Conflict with team', 'Not sure'],
+        multiSelect: true,
+      },
+      {
+        id: 'employeeTenure',
+        text: 'How long do most employees tend to stay?',
+        options: ['Less than 3 months', '3–6 months', '6–12 months', '1+ year', 'Not sure'],
+      },
+      {
+        id: 'shift_meal',
+        text: 'What\'s the meal policy?',
+        options: ['Free shift meal', 'Discounted meal', 'Limited/conditional', 'No meal provided', 'Other'],
+      },
+      {
+        id: 'benefits',
+        text: 'Did you receive any benefits?',
+        options: ['Yes', 'No', 'Not sure'],
+      },
+      {
+        id: 'uniforms',
+        text: 'Were uniforms or dress expectations reasonable?',
+        options: ['Yes', 'Somewhat', 'No'],
+      },
       {
         id: 'posSystem',
         text: 'Which POS system does this workplace use?',
         options: ['Toast', 'TouchBistro', 'Micros', 'Square', 'Clover', 'Other / Not sure'],
-      },
-      {
-        id: 'timeOffProcess',
-        text: 'How is time off typically handled?',
-        options: ['Easy to request and approve', 'Request in advance (generally respected)', 'Must find shift coverage', 'Difficult to get approved', 'Not sure'],
-      },
-      {
-        id: 'offDayCommunication',
-        text: 'Are you expected to respond to work messages on your time off?',
-        options: ['No, never expected', 'Occasionally', 'Often expected', 'Yes, consistently expected'],
-        microcopy: 'This is about contact outside work hours — calls, texts, and expectations to be available when you\'re not on the clock.',
-      },
-      {
-        id: 'sideWorkLoad',
-        text: 'How would you describe side work expectations?',
-        options: ['Minimal', 'Moderate and fair', 'Depends on section/shift', 'Heavy workload', 'Excessive'],
       },
     ],
   },
@@ -229,10 +221,23 @@ const signalGroups = [
   },
 ]
 
+function computeToggleAfterId() {
+  let count = 0
+  for (const group of signalGroups) {
+    if (group.heading === 'High-Level Signal') continue
+    for (const q of group.questions) {
+      if (TOP_10_IDS.has(q.id) && ++count === 10) return q.id
+    }
+  }
+  return null
+}
+const TOGGLE_AFTER_ID = computeToggleAfterId()
+
 export default function WriteReview() {
   const [step, setStep] = useState(1)
   const [answers, setAnswers] = useState({})
   const [verification, setVerification] = useState('')
+  const [showAll, setShowAll] = useState(false)
 
   function setAnswer(id, value) {
     setAnswers(prev => ({ ...prev, [id]: value }))
@@ -319,40 +324,91 @@ export default function WriteReview() {
             {step === 2 && (
               <>
                 <p className={styles.stepHelper}>Answer based on your experience — there's no right or wrong here.</p>
-                {signalGroups.map(group => (
-                  <div key={group.heading} className={styles.signalGroup}>
-                    <p className={styles.signalGroupHeading}>{group.heading}</p>
-                    {group.hint && <p className={styles.groupHint}>{group.hint}</p>}
-                    <div className={styles.questionList}>
-                      {group.questions.map(q => (
-                        <div key={q.id} className={styles.signalQuestion}>
-                          <div className={styles.questionHeader}>
-                            <span className={styles.questionText}>{q.text}</span>
-                            {q.tooltip && (
-                              <span className={styles.tooltipWrap} aria-label={q.tooltip}>
-                                <span className={styles.tooltipIcon}>?</span>
-                                <span className={styles.tooltipBody}>{q.tooltip}</span>
-                              </span>
-                            )}
-                          </div>
-                          {q.microcopy && <p className={styles.questionMicrocopy}>{q.microcopy}</p>}
-                          <div className={styles.pillGroupWrap}>
-                            {q.options.map(opt => (
-                              <button
-                                key={opt}
-                                type="button"
-                                className={`${styles.pill} ${answers[q.id] === opt ? styles.pillActive : ''}`}
-                                onClick={() => setAnswer(q.id, opt)}
-                              >
-                                {opt}
-                              </button>
-                            ))}
-                          </div>
+                {signalGroups
+                  .filter(g => g.heading !== 'High-Level Signal')
+                  .map(group => {
+                    const hasVisible = group.questions.some(q => TOP_10_IDS.has(q.id) || showAll)
+                    if (!hasVisible) return null
+                    return (
+                      <div key={group.heading} className={styles.signalGroup}>
+                        <p className={styles.signalGroupHeading}>{group.heading}</p>
+                        <div className={styles.questionList}>
+                          {group.questions.map(q => {
+                            if (!TOP_10_IDS.has(q.id) && !showAll) return null
+                            return (
+                              <Fragment key={q.id}>
+                                <div className={styles.signalQuestion}>
+                                  <div className={styles.questionHeader}>
+                                    <span className={styles.questionText}>{q.text}</span>
+                                    {q.tooltip && (
+                                      <span className={styles.tooltipWrap} aria-label={q.tooltip}>
+                                        <span className={styles.tooltipIcon}>?</span>
+                                        <span className={styles.tooltipBody}>{q.tooltip}</span>
+                                      </span>
+                                    )}
+                                  </div>
+                                  {q.microcopy && <p className={styles.questionMicrocopy}>{q.microcopy}</p>}
+                                  <div className={styles.pillGroupWrap}>
+                                    {q.options.map(opt => (
+                                      <button
+                                        key={opt}
+                                        type="button"
+                                        className={`${styles.pill} ${answers[q.id] === opt ? styles.pillActive : ''}`}
+                                        onClick={() => setAnswer(q.id, opt)}
+                                      >
+                                        {opt}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                                {q.id === TOGGLE_AFTER_ID && (
+                                  <div className={styles.disclosureToggle}>
+                                    <p className={styles.toggleMicrocopy}>Want to go deeper? Every answer helps other professionals.</p>
+                                    <button
+                                      type="button"
+                                      className={styles.toggleBtn}
+                                      onClick={() => setShowAll(s => !s)}
+                                    >
+                                      {showAll ? 'Show less' : 'Show all questions'}
+                                    </button>
+                                  </div>
+                                )}
+                              </Fragment>
+                            )
+                          })}
                         </div>
-                      ))}
+                      </div>
+                    )
+                  })}
+                {/* High-Level Signal — always visible */}
+                {signalGroups
+                  .filter(g => g.heading === 'High-Level Signal')
+                  .map(group => (
+                    <div key={group.heading} className={styles.signalGroup}>
+                      <p className={styles.signalGroupHeading}>{group.heading}</p>
+                      <div className={styles.questionList}>
+                        {group.questions.map(q => (
+                          <div key={q.id} className={styles.signalQuestion}>
+                            <div className={styles.questionHeader}>
+                              <span className={styles.questionText}>{q.text}</span>
+                            </div>
+                            <div className={styles.pillGroupWrap}>
+                              {q.options.map(opt => (
+                                <button
+                                  key={opt}
+                                  type="button"
+                                  className={`${styles.pill} ${answers[q.id] === opt ? styles.pillActive : ''}`}
+                                  onClick={() => setAnswer(q.id, opt)}
+                                >
+                                  {opt}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </>
             )}
 
