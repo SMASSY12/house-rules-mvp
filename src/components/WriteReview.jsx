@@ -364,7 +364,7 @@ export default function WriteReview() {
 
             {step === 2 && (
               <>
-                <p className={styles.stepHelper}>Answer based on your experience — there's no right or wrong here.</p>
+                <p className={styles.stepHelper}>Rate what you experienced — there's no wrong answer here. In the next step, you'll tell the story behind each one in your own words.</p>
                 {signalGroups
                   .filter(g => g.heading !== 'High-Level Signal')
                   .map(group => {
