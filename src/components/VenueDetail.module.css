@@ -40,7 +40,8 @@
   letter-spacing: -0.005em;
 }
 .reviewCountLink:hover { text-decoration: underline; }
-.metaRow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.metaRow { display: flex; flex-direction: column; gap: 8px; }
+.metaLine { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .verifiedBadge {
   font-size: 0.6875rem;
   font-weight: 700;
@@ -75,7 +76,7 @@
   flex: 1;
   font-family: var(--font-sans);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--color-text-muted);
   background: none;
   border: none;
@@ -87,7 +88,7 @@
   margin-bottom: -1px;
 }
 .tab:hover { color: var(--color-text); }
-.tabActive { color: var(--color-text); border-bottom-color: var(--color-cta); font-weight: 600; }
+.tabActive { color: var(--color-text); border-bottom-color: var(--color-cta); font-weight: 700; background: var(--color-bg); }
 .tabContent { padding: 24px; }
 
 /* Words */
@@ -126,9 +127,13 @@
 .barFill { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
 
 /* Tier colours — hardcoded hex, flag for CSS variable conversion at design system finalisation */
-.green   { color: #2a6e4a; background: #2a6e4a; }
-.neutral { color: #7a6028; background: #7a6028; }
-.red     { color: #8c2f2f; background: #8c2f2f; }
+/* .green/.neutral/.red = text color only (score spans). Bar fills use .barGreen/.barNeutral/.barRed */
+.green   { color: #2a6e4a; }
+.neutral { color: #7a6028; }
+.red     { color: #8c2f2f; }
+.barGreen   { background: #2a6e4a; }
+.barNeutral { background: #7a6028; }
+.barRed     { background: #8c2f2f; }
 
 /* Track record */
 .statRow { display: flex; gap: 32px; padding-bottom: 20px; margin-bottom: 8px; border-bottom: 1px solid var(--color-border); }
@@ -178,7 +183,6 @@ a.statValue:hover { text-decoration: underline; }
 }
 .reviewRowRight { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
 .reviewScore { font-size: 1.125rem; font-weight: 700; letter-spacing: -0.02em; color: var(--color-text); }
-.reviewChevron { font-size: 0.875rem; color: var(--color-text-faint); }
 .reviewExpanded { padding: 0 0 20px; }
 .expandedSignals { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--color-border-subtle); }
 .loadMoreBtn {
@@ -196,6 +200,52 @@ a.statValue:hover { text-decoration: underline; }
   transition: background 0.15s, color 0.15s;
 }
 .loadMoreBtn:hover { background: var(--color-cta); color: #fff; }
+
+/* Answer pills */
+.answerPill {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.pillGreen   { background: rgba(42, 110, 74, 0.1);  color: #2a6e4a; border: 1px solid rgba(42, 110, 74, 0.25); }
+.pillNeutral { background: rgba(122, 96, 40, 0.1);  color: #7a6028; border: 1px solid rgba(122, 96, 40, 0.25); }
+.pillRed     { background: rgba(140, 47, 47, 0.1);  color: #8c2f2f; border: 1px solid rgba(140, 47, 47, 0.25); }
+
+/* Venue header meta */
+.reviewsFromLabel {
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+  letter-spacing: -0.005em;
+  margin-right: 6px;
+}
+
+/* Their words label */
+.recentLabel {
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+  letter-spacing: -0.005em;
+  margin-bottom: 12px;
+}
+
+/* Review card elements */
+.scoreLabel {
+  font-size: 0.6875rem;
+  color: var(--color-text-faint);
+  letter-spacing: -0.005em;
+}
+.expandLink {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.8125rem;
+  color: var(--color-cta);
+  text-decoration: none;
+  letter-spacing: -0.005em;
+}
+.expandLink:hover { text-decoration: underline; }
 
 @media (max-width: 600px) {
   .statRow { gap: 20px; }
