@@ -485,7 +485,7 @@ export default function VenueDetail() {
           )}
           <div className={styles.reviewList}>
             {filteredReviews.slice(0, visibleCount).map(review => (
-              <div key={review.id} className={styles.reviewRow}>
+              <div key={review.id} className={`${styles.reviewRow} ${expanded.has(review.id) ? styles.reviewRowExpanded : ''}`}>
                 <button
                   type="button"
                   className={styles.reviewRowHeader}
@@ -494,7 +494,17 @@ export default function VenueDetail() {
                 >
                   <div className={styles.reviewRowLeft}>
                     <span className={styles.reviewRole}>{review.role}</span>
-                    <span className={styles.reviewRowMeta}>Reviewed {review.recency}</span>
+                    {review.id === reviews[0].id ? (
+                      <span className={styles.reviewRowMeta}>
+                        {review.experienceDuration} · Worked there{' '}
+                        {review.whenWorked.toLowerCase()} · Reviewed{' '}
+                        {review.recency}
+                      </span>
+                    ) : (
+                      <span className={styles.reviewRowMeta}>
+                        Reviewed {review.recency}
+                      </span>
+                    )}
                     <p className={styles.reviewExcerpt}>{review.wishKnown}</p>
                     <span className={styles.expandLink}>
                       {expanded.has(review.id) ? 'Show less' : 'Read full review'}
@@ -508,7 +518,7 @@ export default function VenueDetail() {
                 {expanded.has(review.id) && (
                   <div className={styles.reviewExpanded}>
                     <div className={styles.expandedMeta}>
-                      <span>Worked there {review.whenWorked}</span>
+                      <span>Worked there {review.whenWorked.toLowerCase()}</span>
                       <span>There for {review.experienceDuration}</span>
                       <span>Reviewed {review.recency}</span>
                     </div>
@@ -575,6 +585,13 @@ export default function VenueDetail() {
                         </div>
                       )
                     })()}
+                    <button
+                      type="button"
+                      className={styles.collapseLink}
+                      onClick={() => toggleExpanded(review.id)}
+                    >
+                      Show less
+                    </button>
                   </div>
                 )}
               </div>
