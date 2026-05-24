@@ -265,6 +265,7 @@ export default function VenueDetail() {
   const [expanded, setExpanded]         = useState(new Set())
   const [visibleCount, setVisibleCount] = useState(5)
   const [roleFilter, setRoleFilter]     = useState(null)
+  const [showQuestions, setShowQuestions] = useState(false)
 
   const filteredReviews = reviews.filter(r => !roleFilter || r.role === roleFilter)
   const mostRecent   = reviews[0]
@@ -295,24 +296,6 @@ export default function VenueDetail() {
             <a href="#reviews" className={styles.reviewCountLink} onClick={scrollToReviews}>
               {venue.reviewCount} reviews
             </a>
-          </div>
-          <div className={styles.metaRow}>
-            {venue.verified && (
-              <div className={styles.metaLine}>
-                <span className={styles.verifiedBadge}>Verified</span>
-              </div>
-            )}
-            <div className={styles.metaLine}>
-              <span className={styles.reviewsFromLabel}>Reviews from:</span>
-              {venue.roles.map(r => (
-                <span
-                  key={r}
-                  className={`${styles.roleTag} ${roleFilter === r ? styles.roleTagActive : ''}`}
-                  onClick={() => setRoleFilter(prev => prev === r ? null : r)}
-                  style={{ cursor: 'pointer' }}
-                >{r}</span>
-              ))}
-            </div>
           </div>
         </div>
       </div>
@@ -365,20 +348,27 @@ export default function VenueDetail() {
               const { required, optional } = sortSignals([...mostRecent.signals])
               return (
                 <div className={styles.tabContent}>
-                  <p className={styles.signalGroupLabel}>Key signals</p>
+                  <div className={styles.signalGroupHeaderRow}>
+                    <p className={styles.signalGroupLabel}>Key signals</p>
+                    <button
+                      type="button"
+                      className={styles.showQuestionsBtn}
+                      onClick={() => setShowQuestions(s => !s)}
+                    >
+                      {showQuestions ? 'Hide questions' : 'Show questions'}
+                    </button>
+                  </div>
                   {required.map(signal => (
                     <div key={signal.name} className={styles.signalRow}>
                       <div className={styles.signalMeta}>
-                        <span className={styles.signalName}>
+                        <div className={styles.signalName}>
                           {signal.name}
-                          {SIGNAL_QUESTIONS[signal.name] && (
-                            <span
-                              className={styles.signalInfo}
-                              title={SIGNAL_QUESTIONS[signal.name]}
-                              aria-label={SIGNAL_QUESTIONS[signal.name]}
-                            >ⓘ</span>
+                          {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
+                            <p className={styles.signalQuestion}>
+                              {SIGNAL_QUESTIONS[signal.name]}
+                            </p>
                           )}
-                        </span>
+                        </div>
                         <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
                           {signal.answer}
                         </span>
@@ -393,16 +383,14 @@ export default function VenueDetail() {
                       {optional.map(signal => (
                         <div key={signal.name} className={styles.signalRow}>
                           <div className={styles.signalMeta}>
-                            <span className={styles.signalName}>
+                            <div className={styles.signalName}>
                           {signal.name}
-                          {SIGNAL_QUESTIONS[signal.name] && (
-                            <span
-                              className={styles.signalInfo}
-                              title={SIGNAL_QUESTIONS[signal.name]}
-                              aria-label={SIGNAL_QUESTIONS[signal.name]}
-                            >ⓘ</span>
+                          {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
+                            <p className={styles.signalQuestion}>
+                              {SIGNAL_QUESTIONS[signal.name]}
+                            </p>
                           )}
-                        </span>
+                        </div>
                             <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
                               {signal.answer}
                             </span>
@@ -440,16 +428,7 @@ export default function VenueDetail() {
                 {aggregated.map(signal => (
                   <div key={signal.name} className={styles.signalRow}>
                     <div className={styles.signalMeta}>
-                      <span className={styles.signalName}>
-                          {signal.name}
-                          {SIGNAL_QUESTIONS[signal.name] && (
-                            <span
-                              className={styles.signalInfo}
-                              title={SIGNAL_QUESTIONS[signal.name]}
-                              aria-label={SIGNAL_QUESTIONS[signal.name]}
-                            >ⓘ</span>
-                          )}
-                        </span>
+                      <span className={styles.signalName}>{signal.name}</span>
                       <span className={`${styles.signalScore} ${styles[signalTier(signal.score)]}`}>
                         {signal.score.toFixed(1)}
                       </span>
@@ -472,6 +451,24 @@ export default function VenueDetail() {
       {/* ── Review list ── */}
       <div id="reviews" className={styles.reviewSection}>
         <div className={styles.inner}>
+          <div className={styles.metaRow}>
+            {venue.verified && (
+              <div className={styles.metaLine}>
+                <span className={styles.verifiedBadge}>Verified</span>
+              </div>
+            )}
+            <div className={styles.metaLine}>
+              <span className={styles.reviewsFromLabel}>Reviews from:</span>
+              {venue.roles.map(r => (
+                <span
+                  key={r}
+                  className={`${styles.roleTag} ${roleFilter === r ? styles.roleTagActive : ''}`}
+                  onClick={() => setRoleFilter(prev => prev === r ? null : r)}
+                  style={{ cursor: 'pointer' }}
+                >{r}</span>
+              ))}
+            </div>
+          </div>
           <h2 className={styles.reviewListHeading}>All reviews</h2>
           {roleFilter && (
             <div className={styles.filterChip}>
@@ -540,16 +537,14 @@ export default function VenueDetail() {
                           {required.map(signal => (
                             <div key={signal.name} className={styles.signalRow}>
                               <div className={styles.signalMeta}>
-                                <span className={styles.signalName}>
+                                <div className={styles.signalName}>
                           {signal.name}
-                          {SIGNAL_QUESTIONS[signal.name] && (
-                            <span
-                              className={styles.signalInfo}
-                              title={SIGNAL_QUESTIONS[signal.name]}
-                              aria-label={SIGNAL_QUESTIONS[signal.name]}
-                            >ⓘ</span>
+                          {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
+                            <p className={styles.signalQuestion}>
+                              {SIGNAL_QUESTIONS[signal.name]}
+                            </p>
                           )}
-                        </span>
+                        </div>
                                 <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
                                   {signal.answer}
                                 </span>
@@ -564,16 +559,14 @@ export default function VenueDetail() {
                               {optional.map(signal => (
                                 <div key={signal.name} className={styles.signalRow}>
                                   <div className={styles.signalMeta}>
-                                    <span className={styles.signalName}>
+                                    <div className={styles.signalName}>
                           {signal.name}
-                          {SIGNAL_QUESTIONS[signal.name] && (
-                            <span
-                              className={styles.signalInfo}
-                              title={SIGNAL_QUESTIONS[signal.name]}
-                              aria-label={SIGNAL_QUESTIONS[signal.name]}
-                            >ⓘ</span>
+                          {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
+                            <p className={styles.signalQuestion}>
+                              {SIGNAL_QUESTIONS[signal.name]}
+                            </p>
                           )}
-                        </span>
+                        </div>
                                     <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
                                       {signal.answer}
                                     </span>

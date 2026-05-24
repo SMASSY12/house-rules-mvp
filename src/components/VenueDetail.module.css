@@ -289,6 +289,10 @@ a.statValue:hover { text-decoration: underline; }
 }
 
 .roleTagActive { background: var(--color-cta); color: #fff; border-color: var(--color-cta); }
+.roleTag:hover:not(.roleTagActive) {
+  background: var(--color-border);
+  border-color: var(--color-text-faint);
+}
 .filterChip {
   display: flex;
   align-items: center;
@@ -321,13 +325,30 @@ a.statValue:hover { text-decoration: underline; }
   letter-spacing: -0.005em;
 }
 
-.signalInfo {
-  font-size: 0.6875rem;
-  color: var(--color-text-faint);
-  margin-left: 5px;
-  cursor: help;
+.signalGroupHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
 }
-
+.signalGroupHeaderRow .signalGroupLabel { margin-bottom: 0; }
+.showQuestionsBtn {
+  font-size: 0.75rem;
+  color: var(--color-cta);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: -0.005em;
+}
+.showQuestionsBtn:hover { text-decoration: underline; }
+.signalQuestion {
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+  letter-spacing: -0.005em;
+  margin: 3px 0 0;
+  line-height: 1.4;
+}
 .signalGroupLabel {
   font-size: 0.6875rem;
   font-weight: 700;
