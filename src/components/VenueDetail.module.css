@@ -224,11 +224,23 @@ a.statValue:hover { text-decoration: underline; }
 }
 
 /* Their words label */
+.recentLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
 .recentLabel {
   font-size: 0.75rem;
   color: var(--color-text-faint);
   letter-spacing: -0.005em;
-  margin-bottom: 12px;
+  margin: 0;
+}
+.reviewerScore {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
 }
 
 /* Review card elements */
@@ -246,6 +258,81 @@ a.statValue:hover { text-decoration: underline; }
   letter-spacing: -0.005em;
 }
 .expandLink:hover { text-decoration: underline; }
+
+.trackRecordNote {
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+  letter-spacing: -0.005em;
+  margin: 0 0 16px;
+  padding-top: 12px;
+}
+
+.roleTagActive { background: var(--color-cta); color: #fff; border-color: var(--color-cta); }
+.filterChip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+}
+.filterClear {
+  font-size: 0.8125rem;
+  color: var(--color-cta);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.expandedMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.expandedMeta span {
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+  letter-spacing: -0.005em;
+}
+
+.signalInfo {
+  font-size: 0.6875rem;
+  color: var(--color-text-faint);
+  margin-left: 5px;
+  cursor: help;
+}
+
+.signalGroupLabel {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin-bottom: 8px;
+}
+.signalDivider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 12px;
+}
+.signalDividerLabel {
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+  white-space: nowrap;
+}
+.signalDivider::before,
+.signalDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
 
 @media (max-width: 600px) {
   .statRow { gap: 20px; }

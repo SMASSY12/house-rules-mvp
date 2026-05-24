@@ -65,7 +65,7 @@ const MOCK_REVIEWS = [
       { name: 'Fair treatment',   score: 3.0, answer: 'Some favoritism existed' },
       { name: 'Scheduling',       score: 2.0, answer: 'Last-minute / chaotic' },
       { name: 'Pay consistency',  score: 3.0, answer: 'Usually on time' },
-      { name: 'Management',       score: 2.0, answer: 'Disorganized' },
+      { name: 'Management overall', score: 2.0, answer: 'Disorganized' },
       { name: 'Safe to speak up', score: 2.0, answer: 'Sometimes' },
     ],
   },
@@ -82,7 +82,7 @@ const MOCK_REVIEWS = [
       { name: 'Fair treatment',   score: 2.0, answer: 'Clear in-group / out-group dynamics' },
       { name: 'Scheduling',       score: 2.0, answer: 'Often changed' },
       { name: 'Pay consistency',  score: 2.0, answer: 'Sometimes late' },
-      { name: 'Management',       score: 1.0, answer: 'Toxic' },
+      { name: 'Management overall', score: 1.0, answer: 'Toxic' },
       { name: 'Safe to speak up', score: 1.0, answer: 'Never' },
     ],
   },
@@ -99,7 +99,7 @@ const MOCK_REVIEWS = [
       { name: 'Fair treatment',   score: 4.0, answer: 'Everyone held to the same standard' },
       { name: 'Scheduling',       score: 3.0, answer: 'Somewhat predictable' },
       { name: 'Pay consistency',  score: 3.0, answer: 'Usually on time' },
-      { name: 'Management',       score: 3.0, answer: 'Mixed' },
+      { name: 'Management overall', score: 3.0, answer: 'Mixed' },
       { name: 'Safe to speak up', score: 3.0, answer: 'Usually' },
     ],
   },
@@ -116,7 +116,7 @@ const MOCK_REVIEWS = [
       { name: 'Fair treatment',   score: 3.0, answer: 'Some favoritism existed' },
       { name: 'Scheduling',       score: 3.0, answer: 'Somewhat predictable' },
       { name: 'Pay consistency',  score: 2.0, answer: 'Sometimes late' },
-      { name: 'Management',       score: 2.0, answer: 'Disorganized' },
+      { name: 'Management overall', score: 2.0, answer: 'Disorganized' },
       { name: 'Safe to speak up', score: 2.0, answer: 'Sometimes' },
     ],
   },
@@ -150,7 +150,7 @@ const MOCK_REVIEWS = [
       { name: 'Fair treatment',   score: 4.0, answer: 'Everyone held to the same standard' },
       { name: 'Scheduling',       score: 4.0, answer: 'Consistent' },
       { name: 'Pay consistency',  score: 4.0, answer: 'Always on time' },
-      { name: 'Management',       score: 3.0, answer: 'Mixed' },
+      { name: 'Management overall', score: 3.0, answer: 'Mixed' },
       { name: 'Safe to speak up', score: 3.0, answer: 'Usually' },
     ],
   },
@@ -167,7 +167,7 @@ const MOCK_REVIEWS = [
       { name: 'Fair treatment',   score: 2.0, answer: 'Clear in-group / out-group dynamics' },
       { name: 'Scheduling',       score: 1.0, answer: 'Last-minute / chaotic' },
       { name: 'Pay consistency',  score: 2.0, answer: 'Sometimes late' },
-      { name: 'Management',       score: 1.0, answer: 'Toxic' },
+      { name: 'Management overall', score: 1.0, answer: 'Toxic' },
       { name: 'Safe to speak up', score: 1.0, answer: 'Never' },
     ],
   },
@@ -201,14 +201,14 @@ function scrollToReviews(e) {
 const REQUIRED_SIGNALS = new Set([
   'Pay consistency', 'Tip transparency',
   'Management overall', 'Management under pressure',
-  'Turnover', 'Staff culture', 'Turnover reason',
+  'Turnover', 'Staff culture', 'Feedback response',
   'Scheduling', 'Safe to speak up', 'Fair treatment',
 ])
 
 function sortSignals(signals) {
   const req = signals.filter(s => REQUIRED_SIGNALS.has(s.name)).sort((a, b) => b.score - a.score)
   const opt = signals.filter(s => !REQUIRED_SIGNALS.has(s.name)).sort((a, b) => b.score - a.score)
-  return [...req, ...opt]
+  return { required: req, optional: opt }
 }
 
 function pillClass(signal, styles) {
@@ -226,6 +226,36 @@ function barClass(score, styles) {
   return styles.barRed
 }
 
+const SIGNAL_QUESTIONS = {
+  'Pay consistency':           'How consistent was your pay?',
+  'Tip transparency':          'How clear and transparent were tips?',
+  'Management overall':        'How would you describe management overall?',
+  'Management under pressure': 'How does management typically behave during busy or high-stress shifts?',
+  'Turnover':                  'How would you describe staff turnover?',
+  'Staff culture':             'How would you describe the culture among staff here?',
+  'Feedback response':         'How did management typically respond to feedback or concerns?',
+  'Scheduling':                'How would you describe scheduling?',
+  'Safe to speak up':          'Did you feel comfortable raising concerns or giving feedback here?',
+  'Fair treatment':            'How fairly were all team members treated here?',
+  'Shift fairness':            'How fair were shift or section assignments?',
+  'Training':                  'How well were you trained for your role?',
+  'Off the clock':             'Are you expected to respond to work messages on your time off?',
+  'Time off':                  'How is time off typically handled?',
+  'Side work':                 'How would you describe side work expectations?',
+  'Guest culture':             'What was guest culture like?',
+  'Alcohol & drug use':        'Did coworkers or managers drink or use drugs on the job?',
+  'Cleanliness':               'How clean was the workplace?',
+  'Growth':                    'Were there real opportunities to grow or advance?',
+  'Shift meal':                "What's the meal policy?",
+  'Benefits':                  'Did you receive any benefits?',
+  'Uniforms':                  'Were uniforms or dress expectations reasonable?',
+  'POS system':                'Which POS system does this workplace use?',
+  'Management attrition':      'How often did management change during your time here?',
+  'Management communication':  'How does management prefer to communicate with staff?',
+  'Recognition':               'How often were you recognized or appreciated for your work?',
+  'BOH/FOH dynamic':           'What was the relationship like between front and back of house?',
+}
+
 export default function VenueDetail() {
   const { id } = useParams()
   const venue = MOCK_VENUE
@@ -234,7 +264,9 @@ export default function VenueDetail() {
   const [activeTab, setActiveTab]       = useState('words')
   const [expanded, setExpanded]         = useState(new Set())
   const [visibleCount, setVisibleCount] = useState(5)
+  const [roleFilter, setRoleFilter]     = useState(null)
 
+  const filteredReviews = reviews.filter(r => !roleFilter || r.role === roleFilter)
   const mostRecent   = reviews[0]
   const aggregated   = aggregateSignals(reviews)
   const recommendPct = Math.round(
@@ -272,7 +304,14 @@ export default function VenueDetail() {
             )}
             <div className={styles.metaLine}>
               <span className={styles.reviewsFromLabel}>Reviews from:</span>
-              {venue.roles.map(r => <span key={r} className={styles.roleTag}>{r}</span>)}
+              {venue.roles.map(r => (
+                <span
+                  key={r}
+                  className={`${styles.roleTag} ${roleFilter === r ? styles.roleTagActive : ''}`}
+                  onClick={() => setRoleFilter(prev => prev === r ? null : r)}
+                  style={{ cursor: 'pointer' }}
+                >{r}</span>
+              ))}
             </div>
           </div>
         </div>
@@ -302,7 +341,12 @@ export default function VenueDetail() {
 
             {activeTab === 'words' && (
               <div className={styles.tabContent}>
-                <p className={styles.recentLabel}>Most recent review</p>
+                <div className={styles.recentLabelRow}>
+                  <p className={styles.recentLabel}>Most recent review</p>
+                  <span className={styles.reviewerScore}>
+                    ★ {mostRecent.overallScore.toFixed(1)}
+                  </span>
+                </div>
                 <div className={styles.wordsBlock}>
                   <p className={styles.wordsLabel}>What they wish they'd known</p>
                   <p className={styles.wordsBody}>{mostRecent.wishKnown}</p>
@@ -317,21 +361,60 @@ export default function VenueDetail() {
               </div>
             )}
 
-            {activeTab === 'signals' && (
-              <div className={styles.tabContent}>
-                {sortSignals([...mostRecent.signals]).map(signal => (
-                  <div key={signal.name} className={styles.signalRow}>
-                    <div className={styles.signalMeta}>
-                      <span className={styles.signalName}>{signal.name}</span>
-                      <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
-                        {signal.answer}
-                      </span>
+            {activeTab === 'signals' && (() => {
+              const { required, optional } = sortSignals([...mostRecent.signals])
+              return (
+                <div className={styles.tabContent}>
+                  <p className={styles.signalGroupLabel}>Key signals</p>
+                  {required.map(signal => (
+                    <div key={signal.name} className={styles.signalRow}>
+                      <div className={styles.signalMeta}>
+                        <span className={styles.signalName}>
+                          {signal.name}
+                          {SIGNAL_QUESTIONS[signal.name] && (
+                            <span
+                              className={styles.signalInfo}
+                              title={SIGNAL_QUESTIONS[signal.name]}
+                              aria-label={SIGNAL_QUESTIONS[signal.name]}
+                            >ⓘ</span>
+                          )}
+                        </span>
+                        <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
+                          {signal.answer}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
-                <p className={styles.wordsAttribution}>{mostRecent.role} · {mostRecent.recency}</p>
-              </div>
-            )}
+                  ))}
+                  {optional.length > 0 && (
+                    <>
+                      <div className={styles.signalDivider}>
+                        <span className={styles.signalDividerLabel}>Additional signals</span>
+                      </div>
+                      {optional.map(signal => (
+                        <div key={signal.name} className={styles.signalRow}>
+                          <div className={styles.signalMeta}>
+                            <span className={styles.signalName}>
+                          {signal.name}
+                          {SIGNAL_QUESTIONS[signal.name] && (
+                            <span
+                              className={styles.signalInfo}
+                              title={SIGNAL_QUESTIONS[signal.name]}
+                              aria-label={SIGNAL_QUESTIONS[signal.name]}
+                            >ⓘ</span>
+                          )}
+                        </span>
+                            <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
+                              {signal.answer}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                  <p className={styles.wordsAttribution}>{mostRecent.role} · {mostRecent.recency}</p>
+                </div>
+              )
+            })()}
 
             {activeTab === 'track' && (
               <div className={styles.tabContent}>
@@ -351,10 +434,22 @@ export default function VenueDetail() {
                     <span className={styles.statLabel}>would recommend</span>
                   </div>
                 </div>
+                <p className={styles.trackRecordNote}>
+                  Averages across all {venue.reviewCount} reviews, highest to lowest.
+                </p>
                 {aggregated.map(signal => (
                   <div key={signal.name} className={styles.signalRow}>
                     <div className={styles.signalMeta}>
-                      <span className={styles.signalName}>{signal.name}</span>
+                      <span className={styles.signalName}>
+                          {signal.name}
+                          {SIGNAL_QUESTIONS[signal.name] && (
+                            <span
+                              className={styles.signalInfo}
+                              title={SIGNAL_QUESTIONS[signal.name]}
+                              aria-label={SIGNAL_QUESTIONS[signal.name]}
+                            >ⓘ</span>
+                          )}
+                        </span>
                       <span className={`${styles.signalScore} ${styles[signalTier(signal.score)]}`}>
                         {signal.score.toFixed(1)}
                       </span>
@@ -378,8 +473,18 @@ export default function VenueDetail() {
       <div id="reviews" className={styles.reviewSection}>
         <div className={styles.inner}>
           <h2 className={styles.reviewListHeading}>All reviews</h2>
+          {roleFilter && (
+            <div className={styles.filterChip}>
+              Showing: {roleFilter} reviews
+              <button
+                type="button"
+                className={styles.filterClear}
+                onClick={() => setRoleFilter(null)}
+              >Clear</button>
+            </div>
+          )}
           <div className={styles.reviewList}>
-            {reviews.slice(0, visibleCount).map(review => (
+            {filteredReviews.slice(0, visibleCount).map(review => (
               <div key={review.id} className={styles.reviewRow}>
                 <button
                   type="button"
@@ -389,8 +494,7 @@ export default function VenueDetail() {
                 >
                   <div className={styles.reviewRowLeft}>
                     <span className={styles.reviewRole}>{review.role}</span>
-                    <span className={styles.reviewRowMeta}>Worked there {review.whenWorked}</span>
-                    <span className={styles.reviewRowMeta}>There for {review.experienceDuration} · Reviewed {review.recency}</span>
+                    <span className={styles.reviewRowMeta}>Reviewed {review.recency}</span>
                     <p className={styles.reviewExcerpt}>{review.wishKnown}</p>
                     <span className={styles.expandLink}>
                       {expanded.has(review.id) ? 'Show less' : 'Read full review'}
@@ -403,6 +507,11 @@ export default function VenueDetail() {
                 </button>
                 {expanded.has(review.id) && (
                   <div className={styles.reviewExpanded}>
+                    <div className={styles.expandedMeta}>
+                      <span>Worked there {review.whenWorked}</span>
+                      <span>There for {review.experienceDuration}</span>
+                      <span>Reviewed {review.recency}</span>
+                    </div>
                     <div className={styles.wordsBlock}>
                       <p className={styles.wordsLabel}>What they wish they'd known</p>
                       <p className={styles.wordsBody}>{review.wishKnown}</p>
@@ -413,30 +522,71 @@ export default function VenueDetail() {
                         <p className={styles.wordsBody}>{review.tellFriend}</p>
                       </div>
                     )}
-                    <div className={styles.expandedSignals}>
-                      {sortSignals([...review.signals]).map(signal => (
-                        <div key={signal.name} className={styles.signalRow}>
-                          <div className={styles.signalMeta}>
-                            <span className={styles.signalName}>{signal.name}</span>
-                            <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
-                              {signal.answer}
-                            </span>
-                          </div>
+                    {(() => {
+                      const { required, optional } = sortSignals([...review.signals])
+                      return (
+                        <div className={styles.expandedSignals}>
+                          <p className={styles.signalGroupLabel}>Key signals</p>
+                          {required.map(signal => (
+                            <div key={signal.name} className={styles.signalRow}>
+                              <div className={styles.signalMeta}>
+                                <span className={styles.signalName}>
+                          {signal.name}
+                          {SIGNAL_QUESTIONS[signal.name] && (
+                            <span
+                              className={styles.signalInfo}
+                              title={SIGNAL_QUESTIONS[signal.name]}
+                              aria-label={SIGNAL_QUESTIONS[signal.name]}
+                            >ⓘ</span>
+                          )}
+                        </span>
+                                <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
+                                  {signal.answer}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                          {optional.length > 0 && (
+                            <>
+                              <div className={styles.signalDivider}>
+                                <span className={styles.signalDividerLabel}>Additional signals</span>
+                              </div>
+                              {optional.map(signal => (
+                                <div key={signal.name} className={styles.signalRow}>
+                                  <div className={styles.signalMeta}>
+                                    <span className={styles.signalName}>
+                          {signal.name}
+                          {SIGNAL_QUESTIONS[signal.name] && (
+                            <span
+                              className={styles.signalInfo}
+                              title={SIGNAL_QUESTIONS[signal.name]}
+                              aria-label={SIGNAL_QUESTIONS[signal.name]}
+                            >ⓘ</span>
+                          )}
+                        </span>
+                                    <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
+                                      {signal.answer}
+                                    </span>
+                                  </div>
+                                </div>
+                              ))}
+                            </>
+                          )}
                         </div>
-                      ))}
-                    </div>
+                      )
+                    })()}
                   </div>
                 )}
               </div>
             ))}
           </div>
-          {visibleCount < reviews.length && (
+          {visibleCount < filteredReviews.length && (
             <button
               type="button"
               className={styles.loadMoreBtn}
               onClick={() => setVisibleCount(c => c + 5)}
             >
-              Load {Math.min(5, reviews.length - visibleCount)} more reviews
+              Load {Math.min(5, filteredReviews.length - visibleCount)} more reviews
             </button>
           )}
         </div>
