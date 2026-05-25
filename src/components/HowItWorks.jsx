@@ -14,7 +14,7 @@ const steps = [
   {
     number: '03',
     title: 'Give the next person a head start',
-    body: 'Worked somewhere? Leave a review. It takes a few minutes, stays completely anonymous, and helps the next professional find the right fit.',
+    body: 'Worked somewhere? Leave a review. It takes a few minutes, stays completely anonymous, and could help the next professional find the right fit.',
   },
 ]
 

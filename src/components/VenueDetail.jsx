@@ -309,12 +309,8 @@ export default function VenueDetail() {
   }, [])
 
   useEffect(() => {
-    if (!pendingScrollRef.current) return
-    const row = document.getElementById(`review-${pendingScrollRef.current}`)
-    if (row) {
-      const targetY = window.scrollY + row.getBoundingClientRect().top - 80
-      window.scrollTo({ top: targetY, behavior: 'smooth' })
-    }
+    if (pendingScrollRef.current === null) return
+    window.scrollTo({ top: pendingScrollRef.current, behavior: 'smooth' })
     pendingScrollRef.current = null
   }, [expanded])
 
@@ -421,7 +417,10 @@ export default function VenueDetail() {
                         type="button"
                         className={styles.reviewRowHeader}
                         onClick={() => {
-                          if (!expanded.has(review.id)) pendingScrollRef.current = review.id
+                          if (!expanded.has(review.id)) {
+                            const row = document.getElementById(`review-${review.id}`)
+                            if (row) pendingScrollRef.current = window.scrollY + row.getBoundingClientRect().top - 80
+                          }
                           toggleExpanded(review.id)
                         }}
                         aria-expanded={expanded.has(review.id)}
@@ -487,12 +486,9 @@ export default function VenueDetail() {
                           <button
                             type="button"
                             className={styles.collapseLink}
-                            onClick={() => {
-                              toggleExpanded(review.id)
-                              document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })
-                            }}
+                            onClick={() => toggleExpanded(review.id)}
                           >
-                            ← Back to all reviews
+                            Show less
                           </button>
                         </div>
                       )}
@@ -511,6 +507,12 @@ export default function VenueDetail() {
               </>
             )}
           </div>
+      </div>
+
+      <div className={styles.backToReviewsRow}>
+        <div className={styles.inner}>
+          <Link to="/reviews" className={styles.backToReviewsLink}>← Back to all reviews</Link>
+        </div>
       </div>
 
       <div className={styles.mapSection}>

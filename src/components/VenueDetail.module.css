@@ -502,6 +502,16 @@ a.statValue:hover { text-decoration: underline; }
 }
 .emptyStateCta:hover { background: var(--color-cta-hover); }
 
+/* Back to all reviews page-level CTA */
+.backToReviewsRow { padding: 0 24px 32px; }
+.backToReviewsLink {
+  font-size: 0.8125rem;
+  color: var(--color-cta);
+  text-decoration: none;
+  letter-spacing: -0.005em;
+}
+.backToReviewsLink:hover { text-decoration: underline; }
+
 @media (max-width: 600px) {
   .statRow { gap: 20px; }
   .statValue { font-size: 1.25rem; }

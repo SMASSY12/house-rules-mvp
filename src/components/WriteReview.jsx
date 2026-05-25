@@ -295,7 +295,7 @@ export default function WriteReview() {
           {step > TOTAL_STEPS ? (
           <div className={styles.successState}>
             <p className={styles.successHeading}>Appreciate you. Seriously.</p>
-            <p className={styles.successBody}>Your review is anonymous and helps other professionals find workplaces that treat them right.</p>
+            <p className={styles.successBody}>Your review is anonymous and may help another professional make a smart choice.</p>
             <Link to="/reviews" className={styles.successCta}>Read reviews</Link>
           </div>
         ) : (
@@ -447,7 +447,7 @@ export default function WriteReview() {
                   <p className={styles.toggleMicrocopy}>
                     {showAll
                       ? "These help paint the full picture — answer what you can, skip what doesn't apply."
-                      : 'The more context you share, the more useful your review becomes for other professionals.'}
+                      : 'The more context you share, the more useful your review may be for other professionals.'}
                   </p>
                   <button
                     type="button"
