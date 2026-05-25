@@ -280,21 +280,19 @@ export default function VenueDetail() {
   const venue = MOCK_VENUE
   const reviews = MOCK_REVIEWS
 
-  const [activeTab, setActiveTab]       = useState('words')
-  const [expanded, setExpanded]         = useState(new Set())
+  const [expanded, setExpanded]         = useState(() => new Set(['r1']))
   const [visibleCount, setVisibleCount] = useState(5)
   const [roleFilter, setRoleFilter]     = useState(null)
   const [showQuestions, setShowQuestions] = useState(false)
-  const [showTrackRecord, setShowTrackRecord] = useState(false)
-  const [sortOrder, setSortOrder] = useState('recent')
+  const [showScores, setShowScores]     = useState(false)
+  const [sortOrder, setSortOrder]       = useState('recent')
   const [showHowItWorks, setShowHowItWorks] = useState(false)
   const mapRef = useRef(null)
 
   const filteredReviews = sortReviews(
-    reviews.filter(r => !roleFilter || r.role === roleFilter),
+    reviews.slice(1).filter(r => !roleFilter || r.role === roleFilter),
     sortOrder
   )
-  const mostRecent   = reviews[0]
   const aggregated   = aggregateSignals(reviews)
   const recommendPct = Math.round(
     (reviews.filter(r => r.wouldRecommend).length / reviews.length) * 100
@@ -343,182 +341,36 @@ export default function VenueDetail() {
         </div>
       </div>
 
-      {/* ── Tabbed card ── */}
-      <div className={styles.cardSection}>
-        <div className={styles.inner}>
-          <div className={styles.card}>
-
-            <div className={styles.tabBar}>
-              {[
-                { key: 'words',   label: 'Their words' },
-                { key: 'signals', label: 'Signals' },
-              ].map(tab => (
-                <button
-                  key={tab.key}
-                  type="button"
-                  className={`${styles.tab} ${activeTab === tab.key ? styles.tabActive : ''}`}
-                  onClick={() => setActiveTab(prev => prev === tab.key ? 'words' : tab.key)}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            {activeTab === 'words' && (
-              <div className={styles.tabContent}>
-                <div className={styles.recentLabelRow}>
-                  <p className={styles.recentLabel}>Most recent review</p>
-                  <span className={styles.reviewerScore}>
-                    ★ {mostRecent.overallScore.toFixed(1)}
-                  </span>
-                </div>
-                <div className={styles.wordsBlock}>
-                  <p className={styles.wordsLabel}>What they wish they'd known</p>
-                  <p className={styles.wordsBody}>{mostRecent.wishKnown}</p>
-                </div>
-                {mostRecent.tellFriend && (
-                  <div className={styles.wordsBlock}>
-                    <p className={styles.wordsLabel}>What they'd tell a friend</p>
-                    <p className={styles.wordsBody}>{mostRecent.tellFriend}</p>
-                  </div>
-                )}
-                <p className={styles.wordsAttribution}>{mostRecent.role} · {mostRecent.experienceDuration} · Worked there {mostRecent.whenWorked.toLowerCase()} · {mostRecent.recency}</p>
-              </div>
-            )}
-
-            {activeTab === 'signals' && (() => {
-              const { required, optional } = sortSignals([...mostRecent.signals])
-              return (
-                <div className={styles.tabContent}>
-                  <div>
-                    <p className={styles.signalGroupLabel}>Key signals</p>
-                    <button
-                      type="button"
-                      className={styles.showQuestionsBtn}
-                      onClick={() => setShowQuestions(s => !s)}
-                    >
-                      {showQuestions ? 'Hide questions' : 'Show full questions'}
-                    </button>
-                  </div>
-                  {required.map(signal => (
-                    <div key={signal.name} className={styles.signalRow}>
-                      <div className={styles.signalMeta}>
-                        <div className={styles.signalName}>
-                          {signal.name}
-                          {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
-                            <p className={styles.signalQuestion}>
-                              {SIGNAL_QUESTIONS[signal.name]}
-                            </p>
-                          )}
-                        </div>
-                        <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
-                          {signal.answer}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                  {optional.length > 0 && (
-                    <>
-                      <div className={styles.signalDivider}>
-                        <span className={styles.signalDividerLabel}>Additional signals</span>
-                      </div>
-                      {optional.map(signal => (
-                        <div key={signal.name} className={styles.signalRow}>
-                          <div className={styles.signalMeta}>
-                            <div className={styles.signalName}>
-                          {signal.name}
-                          {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
-                            <p className={styles.signalQuestion}>
-                              {SIGNAL_QUESTIONS[signal.name]}
-                            </p>
-                          )}
-                        </div>
-                            <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
-                              {signal.answer}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </>
-                  )}
-                  <p className={styles.wordsAttribution}>{mostRecent.role} · {mostRecent.recency}</p>
-                </div>
-              )
-            })()}
-
-          </div>
-        </div>
-      </div>
-
-      {/* ── Track record (collapsible) ── */}
-      <div className={styles.trackRecordSection}>
-        <div className={styles.inner}>
-          <button
-            type="button"
-            className={styles.trackRecordToggle}
-            onClick={() => setShowTrackRecord(s => !s)}
-          >
-            <span>Venue track record</span>
-            <span className={styles.trackRecordChevron}>
-              {showTrackRecord ? '▲' : '▼'}
-            </span>
-          </button>
-          {showTrackRecord && (
-            <div className={styles.trackRecordContent}>
-              <div className={styles.statRow}>
-                <div className={styles.stat}>
-                  <a href="#reviews" className={styles.statValue} onClick={scrollToReviews}>
-                    {venue.reviewCount}
-                  </a>
-                  <span className={styles.statLabel}>reviews</span>
-                </div>
-                <div className={styles.stat}>
-                  <span className={styles.statValue}>{venue.overallScore.toFixed(1)}</span>
-                  <span className={styles.statLabel}>overall</span>
-                </div>
-                <div className={styles.stat}>
-                  <span className={styles.statValue}>{recommendPct}%</span>
-                  <span className={styles.statLabel}>would recommend</span>
-                </div>
-              </div>
-              <p className={styles.trackRecordNote}>
-                Averages across all {venue.reviewCount} reviews, highest to lowest.
-              </p>
-              {aggregated.map(signal => (
-                <div key={signal.name} className={styles.signalRow}>
-                  <div className={styles.signalMeta}>
-                    <span className={styles.signalName}>{signal.name}</span>
-                    <span className={`${styles.signalScore} ${styles[signalTier(signal.score)]}`}>
-                      {signal.score.toFixed(1)}
-                    </span>
-                  </div>
-                  <div className={styles.barTrack}>
-                    <div
-                      className={`${styles.barFill} ${barClass(signal.score, styles)}`}
-                      style={{ width: `${(signal.score / 5) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
       {/* ── Review list ── */}
       <div id="reviews" className={styles.reviewSection}>
         <div className={styles.inner}>
           <div className={styles.reviewListHeader}>
             <h2 className={styles.reviewListHeading}>All reviews</h2>
-            <select
-              className={styles.sortSelect}
-              value={sortOrder}
-              onChange={e => { setSortOrder(e.target.value); setVisibleCount(5) }}
-            >
-              <option value="recent">Most recent</option>
-              <option value="highest">Highest rated</option>
-              <option value="lowest">Lowest rated</option>
-            </select>
+            <div className={styles.reviewListControls}>
+              <button
+                type="button"
+                className={styles.overallScoresBtn}
+                onClick={() => setShowScores(true)}
+              >
+                Overall scores
+              </button>
+              <button
+                type="button"
+                className={styles.showQuestionsBtn}
+                onClick={() => setShowQuestions(s => !s)}
+              >
+                {showQuestions ? 'Hide questions' : 'Show full questions'}
+              </button>
+              <select
+                className={styles.sortSelect}
+                value={sortOrder}
+                onChange={e => { setSortOrder(e.target.value); setVisibleCount(5) }}
+              >
+                <option value="recent">Most recent</option>
+                <option value="highest">Highest rated</option>
+                <option value="lowest">Lowest rated</option>
+              </select>
+            </div>
           </div>
           <div className={styles.howItWorksRow}>
             <button
@@ -530,7 +382,7 @@ export default function VenueDetail() {
             </button>
             {showHowItWorks && (
               <div className={styles.howItWorksContent}>
-                <p>Every review on House Rules is written by a hospitality professional who actually worked at this venue. Reviews include structured signals — specific answers about pay, management, culture, and scheduling — alongside the reviewer's own words. All reviews are verified and anonymous. Your name never appears on your review.</p>
+                <p>Every review on House Rules is written by a hospitality professional who actually worked at this business. Reviews include structured signals — specific answers about pay, management, culture, and scheduling — alongside the reviewer's own words. All reviews are verified and anonymous. Your name never appears on your review.</p>
               </div>
             )}
           </div>
@@ -557,6 +409,102 @@ export default function VenueDetail() {
               >Clear</button>
             </div>
           )}
+          <div className={styles.pinnedReview}>
+            <span className={styles.mostRecentBadge}>Most recent review</span>
+            <button
+              type="button"
+              className={styles.reviewRowHeader}
+              onClick={() => toggleExpanded(reviews[0].id)}
+              aria-expanded={expanded.has(reviews[0].id)}
+            >
+              <div className={styles.reviewRowLeft}>
+                <span className={styles.reviewRole}>{reviews[0].role}</span>
+                <span className={styles.reviewRowMeta}>
+                  {reviews[0].experienceDuration} · Worked there{' '}
+                  {reviews[0].whenWorked.toLowerCase()} · Reviewed{' '}
+                  {reviews[0].recency}
+                </span>
+                <p className={styles.reviewExcerpt}>{reviews[0].wishKnown}</p>
+                <span className={styles.expandLink}>
+                  {expanded.has(reviews[0].id) ? 'Show less' : 'Read full review'}
+                </span>
+              </div>
+              <div className={styles.reviewRowRight}>
+                <span className={styles.scoreLabel}>Their score</span>
+                <span className={styles.reviewScore}>{reviews[0].overallScore.toFixed(1)}</span>
+              </div>
+            </button>
+            {expanded.has(reviews[0].id) && (
+              <div className={styles.reviewExpanded}>
+                <div className={styles.expandedMeta}>
+                  <span>Worked there {reviews[0].whenWorked.toLowerCase()}</span>
+                  <span>There for {reviews[0].experienceDuration}</span>
+                  <span>Reviewed {reviews[0].recency}</span>
+                </div>
+                <div className={styles.wordsBlock}>
+                  <p className={styles.wordsLabel}>What they wish they'd known</p>
+                  <p className={styles.wordsBody}>{reviews[0].wishKnown}</p>
+                </div>
+                {reviews[0].tellFriend && (
+                  <div className={styles.wordsBlock}>
+                    <p className={styles.wordsLabel}>What they'd tell a friend</p>
+                    <p className={styles.wordsBody}>{reviews[0].tellFriend}</p>
+                  </div>
+                )}
+                {(() => {
+                  const { required, optional } = sortSignals([...reviews[0].signals])
+                  return (
+                    <div className={styles.expandedSignals}>
+                      <p className={styles.signalGroupLabel}>Key signals</p>
+                      {required.map(signal => (
+                        <div key={signal.name} className={styles.signalRow}>
+                          <div className={styles.signalMeta}>
+                            <div className={styles.signalName}>
+                              {signal.name}
+                              {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
+                                <p className={styles.signalQuestion}>{SIGNAL_QUESTIONS[signal.name]}</p>
+                              )}
+                            </div>
+                            <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
+                              {signal.answer}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                      {optional.length > 0 && (
+                        <>
+                          <p className={styles.signalGroupLabel}>Additional signals</p>
+                          {optional.map(signal => (
+                            <div key={signal.name} className={styles.signalRow}>
+                              <div className={styles.signalMeta}>
+                                <div className={styles.signalName}>
+                                  {signal.name}
+                                  {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
+                                    <p className={styles.signalQuestion}>{SIGNAL_QUESTIONS[signal.name]}</p>
+                                  )}
+                                </div>
+                                <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
+                                  {signal.answer}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </>
+                      )}
+                    </div>
+                  )
+                })()}
+                <button
+                  type="button"
+                  className={styles.collapseLink}
+                  onClick={() => toggleExpanded(reviews[0].id)}
+                >
+                  Show less
+                </button>
+              </div>
+            )}
+          </div>
+
           <div className={styles.reviewList}>
             {filteredReviews.slice(0, visibleCount).map(review => (
               <div key={review.id} className={`${styles.reviewRow} ${expanded.has(review.id) ? styles.reviewRowExpanded : ''}`}>
@@ -568,17 +516,7 @@ export default function VenueDetail() {
                 >
                   <div className={styles.reviewRowLeft}>
                     <span className={styles.reviewRole}>{review.role}</span>
-                    {review.id === reviews[0].id ? (
-                      <span className={styles.reviewRowMeta}>
-                        {review.experienceDuration} · Worked there{' '}
-                        {review.whenWorked.toLowerCase()} · Reviewed{' '}
-                        {review.recency}
-                      </span>
-                    ) : (
-                      <span className={styles.reviewRowMeta}>
-                        Reviewed {review.recency}
-                      </span>
-                    )}
+                    <span className={styles.reviewRowMeta}>Reviewed {review.recency}</span>
                     <p className={styles.reviewExcerpt}>{review.wishKnown}</p>
                     <span className={styles.expandLink}>
                       {expanded.has(review.id) ? 'Show less' : 'Read full review'}
@@ -615,13 +553,11 @@ export default function VenueDetail() {
                             <div key={signal.name} className={styles.signalRow}>
                               <div className={styles.signalMeta}>
                                 <div className={styles.signalName}>
-                          {signal.name}
-                          {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
-                            <p className={styles.signalQuestion}>
-                              {SIGNAL_QUESTIONS[signal.name]}
-                            </p>
-                          )}
-                        </div>
+                                  {signal.name}
+                                  {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
+                                    <p className={styles.signalQuestion}>{SIGNAL_QUESTIONS[signal.name]}</p>
+                                  )}
+                                </div>
                                 <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
                                   {signal.answer}
                                 </span>
@@ -630,20 +566,16 @@ export default function VenueDetail() {
                           ))}
                           {optional.length > 0 && (
                             <>
-                              <div className={styles.signalDivider}>
-                                <span className={styles.signalDividerLabel}>Additional signals</span>
-                              </div>
+                              <p className={styles.signalGroupLabel}>Additional signals</p>
                               {optional.map(signal => (
                                 <div key={signal.name} className={styles.signalRow}>
                                   <div className={styles.signalMeta}>
                                     <div className={styles.signalName}>
-                          {signal.name}
-                          {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
-                            <p className={styles.signalQuestion}>
-                              {SIGNAL_QUESTIONS[signal.name]}
-                            </p>
-                          )}
-                        </div>
+                                      {signal.name}
+                                      {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
+                                        <p className={styles.signalQuestion}>{SIGNAL_QUESTIONS[signal.name]}</p>
+                                      )}
+                                    </div>
                                     <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
                                       {signal.answer}
                                     </span>
@@ -686,6 +618,59 @@ export default function VenueDetail() {
           <div ref={mapRef} className={styles.mapContainer} />
         </div>
       </div>
+
+      {showScores && (
+        <div
+          className={styles.modalOverlay}
+          onClick={e => { if (e.target === e.currentTarget) setShowScores(false) }}
+        >
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Overall scores</h2>
+              <button
+                type="button"
+                className={styles.modalClose}
+                onClick={() => setShowScores(false)}
+              >✕</button>
+            </div>
+            <div className={styles.statRow}>
+              <div className={styles.stat}>
+                <a href="#reviews" className={styles.statValue} onClick={scrollToReviews}>
+                  {venue.reviewCount}
+                </a>
+                <span className={styles.statLabel}>reviews</span>
+              </div>
+              <div className={styles.stat}>
+                <span className={styles.statValue}>{venue.overallScore.toFixed(1)}</span>
+                <span className={styles.statLabel}>overall</span>
+              </div>
+              <div className={styles.stat}>
+                <span className={styles.statValue}>{recommendPct}%</span>
+                <span className={styles.statLabel}>would recommend</span>
+              </div>
+            </div>
+            <p className={styles.trackRecordNote}>
+              Averages across all {venue.reviewCount} reviews, highest to lowest.
+            </p>
+            {aggregated.map(signal => (
+              <div key={signal.name} className={styles.signalRow}>
+                <div className={styles.signalMeta}>
+                  <span className={styles.signalName}>{signal.name}</span>
+                  <span className={`${styles.signalScore} ${styles[signalTier(signal.score)]}`}>
+                    {signal.score.toFixed(1)}
+                  </span>
+                </div>
+                <div className={styles.barTrack}>
+                  <div
+                    className={`${styles.barFill} ${barClass(signal.score, styles)}`}
+                    style={{ width: `${(signal.score / 5) * 100}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
     </div>
   )
