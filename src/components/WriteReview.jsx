@@ -276,19 +276,21 @@ export default function WriteReview() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.pageHeader}>
-        <div className={styles.inner}>
-          <h1 className={styles.pageTitle}>Tell other professionals what it was really like.</h1>
-          <p className={styles.pageSubhead}>The real story in your words.</p>
-          <p className={styles.privacyStatement}>
-            <svg className={styles.privacyIcon} width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <rect x="1" y="6" width="11" height="7.5" rx="1.5" stroke="currentColor" strokeWidth="1.25"/>
-              <path d="M4 6V4a2.5 2.5 0 015 0v2" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/>
-            </svg>
-            Your name never appears on your review. We don't share your details with businesses. Ever.
-          </p>
+      {step <= TOTAL_STEPS && (
+        <div className={styles.pageHeader}>
+          <div className={styles.inner}>
+            <h1 className={styles.pageTitle}>Tell other professionals what it was really like.</h1>
+            <p className={styles.pageSubhead}>The real story in your words.</p>
+            <p className={styles.privacyStatement}>
+              <svg className={styles.privacyIcon} width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="1" y="6" width="11" height="7.5" rx="1.5" stroke="currentColor" strokeWidth="1.25"/>
+                <path d="M4 6V4a2.5 2.5 0 015 0v2" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/>
+              </svg>
+              Your name never appears on your review. We don't share your details with businesses. Ever.
+            </p>
+          </div>
         </div>
-      </div>
+      )}
       <div className={styles.formArea}>
         <div className={styles.inner}>
           {step > TOTAL_STEPS ? (
