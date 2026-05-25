@@ -4,7 +4,7 @@ const steps = [
   {
     number: '01',
     title: 'Find the place',
-    body: 'Search any bar, restaurant, or café by name or neighbourhood. See who's reviewed it and what role they held.',
+    body: "Search any bar, restaurant, or café by name or neighbourhood. See who's reviewed it and what role they held.",
   },
   {
     number: '02',

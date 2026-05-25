@@ -21,11 +21,14 @@ export default function ReviewsPage() {
 
   const allRoles = [...new Set(MOCK_VENUES.flatMap(v => v.roles))].sort()
 
+  const matchesQuery = (text, q) =>
+    text.toLowerCase().split(' ').some(word => word.startsWith(q.toLowerCase()))
+
   const filteredVenues = MOCK_VENUES.filter(v => {
-    const matchesSearch =
-      v.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      v.neighbourhood.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      v.type.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch = !searchTerm ||
+      matchesQuery(v.name, searchTerm) ||
+      matchesQuery(v.neighbourhood, searchTerm) ||
+      matchesQuery(v.type, searchTerm)
     const matchesRole = !roleFilter || v.roles.includes(roleFilter)
     return matchesSearch && matchesRole
   })

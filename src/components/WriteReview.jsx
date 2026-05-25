@@ -269,21 +269,29 @@ export default function WriteReview() {
   function prevStep() { setStep(s => Math.max(s - 1, 1)) }
 
   return (
-    <section id="write" className={styles.section}>
-      <div className={styles.inner}>
-        {step > TOTAL_STEPS ? (
+    <div className={styles.page}>
+      <div className={styles.pageHeader}>
+        <div className={styles.inner}>
+          <h1 className={styles.pageTitle}>Tell other professionals what it was really like.</h1>
+          <p className={styles.pageSubhead}>Your words. The real story they need.</p>
+          <p className={styles.privacyStatement}>
+            <svg className={styles.privacyIcon} width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="1" y="6" width="11" height="7.5" rx="1.5" stroke="currentColor" strokeWidth="1.25"/>
+              <path d="M4 6V4a2.5 2.5 0 015 0v2" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/>
+            </svg>
+            Your name never appears on your review. We don't share your details with businesses. Ever.
+          </p>
+        </div>
+      </div>
+      <div className={styles.formArea}>
+        <div className={styles.inner}>
+          {step > TOTAL_STEPS ? (
           <div className={styles.successState}>
             <p className={styles.successHeading}>Appreciate you. Seriously.</p>
             <p className={styles.successBody}>You just made this easier for someone else to make the right call.</p>
           </div>
         ) : (
           <>
-          <div className={styles.header}>
-            <h2 className={styles.title}>Tell other professionals what it was really like.</h2>
-            <p className={styles.subtitle}>
-              Your words. Your voice. The real story others need to hear.
-            </p>
-          </div>
           <form className={styles.form} onSubmit={e => e.preventDefault()}>
 
             <p className={styles.stepLabel}>
@@ -408,16 +416,44 @@ export default function WriteReview() {
                                   </div>
                                 </div>
                                 {q.id === TOGGLE_AFTER_ID && (
-                                  <div className={styles.disclosureToggle}>
-                                    <p className={styles.toggleMicrocopy}>Want to go deeper? Every answer helps other professionals.</p>
-                                    <button
-                                      type="button"
-                                      className={styles.toggleBtn}
-                                      onClick={() => setShowAll(s => !s)}
-                                    >
-                                      {showAll ? 'Show less' : 'Show all questions'}
-                                    </button>
-                                  </div>
+                                  <>
+                                    {signalGroups.filter(g => g.heading === 'High-Level Signal').map(hls => (
+                                      <div key={hls.heading} className={styles.signalGroup}>
+                                        <p className={styles.signalGroupHeading}>{hls.heading}</p>
+                                        <div className={styles.questionList}>
+                                          {hls.questions.map(sq => (
+                                            <div key={sq.id} className={styles.signalQuestion}>
+                                              <div className={styles.questionHeader}>
+                                                <span className={styles.questionText}>{sq.text}</span>
+                                              </div>
+                                              <div className={styles.pillGroupWrap}>
+                                                {sq.options.map(opt => (
+                                                  <button
+                                                    key={opt}
+                                                    type="button"
+                                                    className={`${styles.pill} ${answers[sq.id] === opt ? styles.pillActive : ''}`}
+                                                    onClick={() => setAnswer(sq.id, opt)}
+                                                  >
+                                                    {opt}
+                                                  </button>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    ))}
+                                    <div className={styles.disclosureToggle}>
+                                      <p className={styles.toggleMicrocopy}>The more context you share, the more useful your review becomes for other professionals.</p>
+                                      <button
+                                        type="button"
+                                        className={styles.toggleBtn}
+                                        onClick={() => setShowAll(s => !s)}
+                                      >
+                                        {showAll ? 'Show less' : 'Show all questions'}
+                                      </button>
+                                    </div>
+                                  </>
                                 )}
                               </Fragment>
                             )
@@ -426,40 +462,6 @@ export default function WriteReview() {
                       </div>
                     )
                   })}
-                {/* High-Level Signal — always visible */}
-                {signalGroups
-                  .filter(g => g.heading === 'High-Level Signal')
-                  .map(group => (
-                    <div key={group.heading} className={styles.signalGroup}>
-                      <p className={styles.signalGroupHeading}>{group.heading}</p>
-                      <div className={styles.questionList}>
-                        {group.questions.map(q => (
-                          <div key={q.id} className={styles.signalQuestion}>
-                            <div className={styles.questionHeader}>
-                              <span className={styles.questionText}>{q.text}</span>
-                            </div>
-                            <div className={styles.pillGroupWrap}>
-                              {q.options.map(opt => (
-                                <button
-                                  key={opt}
-                                  type="button"
-                                  className={`${styles.pill} ${
-                                    (q.multiSelect
-                                      ? Array.isArray(answers[q.id]) && answers[q.id].includes(opt)
-                                      : answers[q.id] === opt)
-                                      ? styles.pillActive : ''
-                                  }`}
-                                  onClick={() => q.multiSelect ? toggleMultiAnswer(q.id, opt) : setAnswer(q.id, opt)}
-                                >
-                                  {opt}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
               </>
             )}
 
@@ -530,7 +532,6 @@ export default function WriteReview() {
                       <option value="paystub">Link to schedule or paystub</option>
                       <option value="email">Verify via email domain</option>
                       <option value="profile">Link a public profile</option>
-                      <option value="other">Other</option>
                     </select>
                   </div>
                   {verification && (
@@ -572,7 +573,8 @@ export default function WriteReview() {
           </form>
           </>
         )}
+        </div>
       </div>
-    </section>
+    </div>
   )
 }
