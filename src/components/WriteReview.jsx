@@ -307,7 +307,6 @@ export default function WriteReview() {
 
             {step === 1 && (
               <>
-                <p className={styles.retaliationNote}>Your name never appears on your review.</p>
                 <fieldset className={styles.fieldset}>
                 <div className={styles.fields}>
                   <div className={styles.field}>
