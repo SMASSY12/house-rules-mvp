@@ -280,17 +280,17 @@ export default function VenueDetail() {
   const venue = MOCK_VENUE
   const reviews = MOCK_REVIEWS
 
-  const [expanded, setExpanded]         = useState(() => new Set(['r1']))
+  const [expanded, setExpanded]         = useState(new Set())
   const [visibleCount, setVisibleCount] = useState(5)
   const [roleFilter, setRoleFilter]     = useState(null)
-  const [showQuestions, setShowQuestions] = useState(false)
   const [showScores, setShowScores]     = useState(false)
   const [sortOrder, setSortOrder]       = useState('recent')
   const [showHowItWorks, setShowHowItWorks] = useState(false)
+  const [showSignals, setShowSignals]       = useState(false)
   const mapRef = useRef(null)
 
   const filteredReviews = sortReviews(
-    reviews.slice(1).filter(r => !roleFilter || r.role === roleFilter),
+    reviews.filter(r => !roleFilter || r.role === roleFilter),
     sortOrder
   )
   const aggregated   = aggregateSignals(reviews)
@@ -354,13 +354,6 @@ export default function VenueDetail() {
               >
                 Overall scores
               </button>
-              <button
-                type="button"
-                className={styles.showQuestionsBtn}
-                onClick={() => setShowQuestions(s => !s)}
-              >
-                {showQuestions ? 'Hide questions' : 'Show full questions'}
-              </button>
               <select
                 className={styles.sortSelect}
                 value={sortOrder}
@@ -382,7 +375,15 @@ export default function VenueDetail() {
             </button>
             {showHowItWorks && (
               <div className={styles.howItWorksContent}>
-                <p>Every review on House Rules is written by a hospitality professional who actually worked at this business. Reviews include structured signals — specific answers about pay, management, culture, and scheduling — alongside the reviewer's own words. All reviews are verified and anonymous. Your name never appears on your review.</p>
+                <p>Every review on House Rules is written by a hospitality professional who actually worked at this business. Reviews include{' '}
+                <button
+                  type="button"
+                  className={styles.inlineLink}
+                  onClick={() => setShowSignals(true)}
+                >
+                  structured signals
+                </button>
+                {' '}— specific, categorized answers about pay, management, culture, and scheduling — alongside the reviewer's own words. All reviews are verified and anonymous. Your name never appears on your review.</p>
               </div>
             )}
           </div>
@@ -409,102 +410,6 @@ export default function VenueDetail() {
               >Clear</button>
             </div>
           )}
-          <div className={styles.pinnedReview}>
-            <span className={styles.mostRecentBadge}>Most recent review</span>
-            <button
-              type="button"
-              className={styles.reviewRowHeader}
-              onClick={() => toggleExpanded(reviews[0].id)}
-              aria-expanded={expanded.has(reviews[0].id)}
-            >
-              <div className={styles.reviewRowLeft}>
-                <span className={styles.reviewRole}>{reviews[0].role}</span>
-                <span className={styles.reviewRowMeta}>
-                  {reviews[0].experienceDuration} · Worked there{' '}
-                  {reviews[0].whenWorked.toLowerCase()} · Reviewed{' '}
-                  {reviews[0].recency}
-                </span>
-                <p className={styles.reviewExcerpt}>{reviews[0].wishKnown}</p>
-                <span className={styles.expandLink}>
-                  {expanded.has(reviews[0].id) ? 'Show less' : 'Read full review'}
-                </span>
-              </div>
-              <div className={styles.reviewRowRight}>
-                <span className={styles.scoreLabel}>Their score</span>
-                <span className={styles.reviewScore}>{reviews[0].overallScore.toFixed(1)}</span>
-              </div>
-            </button>
-            {expanded.has(reviews[0].id) && (
-              <div className={styles.reviewExpanded}>
-                <div className={styles.expandedMeta}>
-                  <span>Worked there {reviews[0].whenWorked.toLowerCase()}</span>
-                  <span>There for {reviews[0].experienceDuration}</span>
-                  <span>Reviewed {reviews[0].recency}</span>
-                </div>
-                <div className={styles.wordsBlock}>
-                  <p className={styles.wordsLabel}>What they wish they'd known</p>
-                  <p className={styles.wordsBody}>{reviews[0].wishKnown}</p>
-                </div>
-                {reviews[0].tellFriend && (
-                  <div className={styles.wordsBlock}>
-                    <p className={styles.wordsLabel}>What they'd tell a friend</p>
-                    <p className={styles.wordsBody}>{reviews[0].tellFriend}</p>
-                  </div>
-                )}
-                {(() => {
-                  const { required, optional } = sortSignals([...reviews[0].signals])
-                  return (
-                    <div className={styles.expandedSignals}>
-                      <p className={styles.signalGroupLabel}>Key signals</p>
-                      {required.map(signal => (
-                        <div key={signal.name} className={styles.signalRow}>
-                          <div className={styles.signalMeta}>
-                            <div className={styles.signalName}>
-                              {signal.name}
-                              {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
-                                <p className={styles.signalQuestion}>{SIGNAL_QUESTIONS[signal.name]}</p>
-                              )}
-                            </div>
-                            <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
-                              {signal.answer}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                      {optional.length > 0 && (
-                        <>
-                          <p className={styles.signalGroupLabel}>Additional signals</p>
-                          {optional.map(signal => (
-                            <div key={signal.name} className={styles.signalRow}>
-                              <div className={styles.signalMeta}>
-                                <div className={styles.signalName}>
-                                  {signal.name}
-                                  {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
-                                    <p className={styles.signalQuestion}>{SIGNAL_QUESTIONS[signal.name]}</p>
-                                  )}
-                                </div>
-                                <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
-                                  {signal.answer}
-                                </span>
-                              </div>
-                            </div>
-                          ))}
-                        </>
-                      )}
-                    </div>
-                  )
-                })()}
-                <button
-                  type="button"
-                  className={styles.collapseLink}
-                  onClick={() => toggleExpanded(reviews[0].id)}
-                >
-                  Show less
-                </button>
-              </div>
-            )}
-          </div>
-
           <div className={styles.reviewList}>
             {filteredReviews.slice(0, visibleCount).map(review => (
               <div key={review.id} className={`${styles.reviewRow} ${expanded.has(review.id) ? styles.reviewRowExpanded : ''}`}>
@@ -554,9 +459,6 @@ export default function VenueDetail() {
                               <div className={styles.signalMeta}>
                                 <div className={styles.signalName}>
                                   {signal.name}
-                                  {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
-                                    <p className={styles.signalQuestion}>{SIGNAL_QUESTIONS[signal.name]}</p>
-                                  )}
                                 </div>
                                 <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
                                   {signal.answer}
@@ -572,9 +474,6 @@ export default function VenueDetail() {
                                   <div className={styles.signalMeta}>
                                     <div className={styles.signalName}>
                                       {signal.name}
-                                      {showQuestions && SIGNAL_QUESTIONS[signal.name] && (
-                                        <p className={styles.signalQuestion}>{SIGNAL_QUESTIONS[signal.name]}</p>
-                                      )}
                                     </div>
                                     <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
                                       {signal.answer}
@@ -618,6 +517,30 @@ export default function VenueDetail() {
           <div ref={mapRef} className={styles.mapContainer} />
         </div>
       </div>
+
+      {showSignals && (
+        <div
+          className={styles.modalOverlay}
+          onClick={e => { if (e.target === e.currentTarget) setShowSignals(false) }}
+        >
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>What are signals?</h2>
+              <button
+                type="button"
+                className={styles.modalClose}
+                onClick={() => setShowSignals(false)}
+              >✕</button>
+            </div>
+            {Object.entries(SIGNAL_QUESTIONS).map(([name, question]) => (
+              <div key={name} className={styles.signalExplainerRow}>
+                <p className={styles.signalExplainerName}>{name}</p>
+                <p className={styles.signalExplainerQuestion}>{question}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {showScores && (
         <div
