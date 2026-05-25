@@ -491,8 +491,13 @@ export default function VenueDetail() {
                       className={styles.collapseLink}
                       onClick={() => {
                         const row = document.getElementById(`review-${review.id}`)
-                        if (row) row.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                        const targetY = row
+                          ? window.scrollY + row.getBoundingClientRect().top - 80
+                          : window.scrollY
                         toggleExpanded(review.id)
+                        requestAnimationFrame(() => {
+                          window.scrollTo({ top: targetY, behavior: 'instant' })
+                        })
                       }}
                     >
                       Show less
