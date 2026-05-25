@@ -504,7 +504,7 @@ export default function WriteReview() {
                     <textarea
                       className={styles.textarea}
                       rows={2}
-                      placeholder="Your honest answer..."
+                      placeholder="...that paychecks were sometimes late, or that the schedule could change with less than 24 hours notice."
                     />
                   </div>
                   <div className={styles.field}>
@@ -515,7 +515,7 @@ export default function WriteReview() {
                     <textarea
                       className={styles.textarea}
                       rows={4}
-                      placeholder="Say it like you would to a friend..."
+                      placeholder="...that the team is genuinely great, but management turns over often — go in knowing that."
                     />
                   </div>
                 </div>
