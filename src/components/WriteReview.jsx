@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './WriteReview.module.css'
 
@@ -12,7 +12,7 @@ const TOP_10_IDS = new Set([
   'managementUnderPressure',
   'turnover',
   'staff_culture',
-  'turnoverReason',
+  'feedback_response',
   'scheduling',
   'safe_to_speak_up',
   'fair_treatment',
@@ -234,17 +234,22 @@ const signalGroups = [
   },
 ]
 
-function computeToggleAfterId() {
-  let count = 0
-  for (const group of signalGroups) {
-    if (group.heading === 'High-Level Signal') continue
-    for (const q of group.questions) {
-      if (TOP_10_IDS.has(q.id) && ++count === 10) return q.id
-    }
-  }
-  return null
-}
-const TOGGLE_AFTER_ID = computeToggleAfterId()
+const REQUIRED_ORDER = [
+  'pay_consistency',
+  'tip_transparency',
+  'management',
+  'managementUnderPressure',
+  'turnover',
+  'staff_culture',
+  'scheduling',
+  'safe_to_speak_up',
+  'fair_treatment',
+  'feedback_response',
+]
+
+const allSignalById = Object.fromEntries(
+  signalGroups.flatMap(g => g.questions).map(q => [q.id, q])
+)
 
 export default function WriteReview() {
   const [step, setStep] = useState(1)
@@ -275,7 +280,7 @@ export default function WriteReview() {
       <div className={styles.pageHeader}>
         <div className={styles.inner}>
           <h1 className={styles.pageTitle}>Tell other professionals what it was really like.</h1>
-          <p className={styles.pageSubhead}>Your words. The real story they need.</p>
+          <p className={styles.pageSubhead}>The real story in your words.</p>
           <p className={styles.privacyStatement}>
             <svg className={styles.privacyIcon} width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <rect x="1" y="6" width="11" height="7.5" rx="1.5" stroke="currentColor" strokeWidth="1.25"/>
@@ -376,98 +381,117 @@ export default function WriteReview() {
             {step === 2 && (
               <>
                 <p className={styles.stepHelper}>Rate what you experienced — there's no wrong answer here. In the next step, you'll tell the story behind each one in your own words.</p>
-                {signalGroups
+
+                <div className={styles.questionList}>
+                  {REQUIRED_ORDER.map(id => {
+                    const q = allSignalById[id]
+                    return (
+                      <div key={q.id} className={styles.signalQuestion}>
+                        <div className={styles.questionHeader}>
+                          <span className={styles.questionText}>{q.text}</span>
+                        </div>
+                        {q.microcopy && <p className={styles.questionMicrocopy}>{q.microcopy}</p>}
+                        <div className={styles.pillGroupWrap}>
+                          {q.options.map(opt => (
+                            <button
+                              key={opt}
+                              type="button"
+                              className={`${styles.pill} ${
+                                (q.multiSelect
+                                  ? Array.isArray(answers[q.id]) && answers[q.id].includes(opt)
+                                  : answers[q.id] === opt)
+                                  ? styles.pillActive : ''
+                              }`}
+                              onClick={() => q.multiSelect ? toggleMultiAnswer(q.id, opt) : setAnswer(q.id, opt)}
+                            >
+                              {opt}
+                            </button>
+                          ))}
+                        </div>
+                        {attempted && (q.multiSelect ? !answers[q.id]?.length : !answers[q.id]) && (
+                          <p className={styles.signalValidation}>This one's important — takes 10 seconds.</p>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {signalGroups.filter(g => g.heading === 'High-Level Signal').map(hls => (
+                  <div key={hls.heading} className={styles.signalGroup}>
+                    <p className={styles.signalGroupHeading}>{hls.heading}</p>
+                    <div className={styles.questionList}>
+                      {hls.questions.map(sq => (
+                        <div key={sq.id} className={styles.signalQuestion}>
+                          <div className={styles.questionHeader}>
+                            <span className={styles.questionText}>{sq.text}</span>
+                          </div>
+                          <div className={styles.pillGroupWrap}>
+                            {sq.options.map(opt => (
+                              <button
+                                key={opt}
+                                type="button"
+                                className={`${styles.pill} ${answers[sq.id] === opt ? styles.pillActive : ''}`}
+                                onClick={() => setAnswer(sq.id, opt)}
+                              >
+                                {opt}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+
+                <div className={styles.disclosureToggle}>
+                  <p className={styles.toggleMicrocopy}>
+                    {showAll
+                      ? "These help paint the full picture — answer what you can, skip what doesn't apply."
+                      : 'The more context you share, the more useful your review becomes for other professionals.'}
+                  </p>
+                  <button
+                    type="button"
+                    className={styles.toggleBtn}
+                    onClick={() => setShowAll(s => !s)}
+                  >
+                    {showAll ? 'Show less' : 'Show all questions'}
+                  </button>
+                </div>
+
+                {showAll && signalGroups
                   .filter(g => g.heading !== 'High-Level Signal')
                   .map(group => {
-                    const hasVisible = group.questions.some(q => TOP_10_IDS.has(q.id) || showAll)
-                    if (!hasVisible) return null
+                    const optionalQs = group.questions.filter(q => !TOP_10_IDS.has(q.id))
+                    if (!optionalQs.length) return null
                     return (
                       <div key={group.heading} className={styles.signalGroup}>
                         <p className={styles.signalGroupHeading}>{group.heading}</p>
                         <div className={styles.questionList}>
-                          {group.questions.map(q => {
-                            if (!TOP_10_IDS.has(q.id) && !showAll) return null
-                            return (
-                              <Fragment key={q.id}>
-                                <div className={styles.signalQuestion}>
-                                  <div className={styles.questionHeader}>
-                                    <span className={styles.questionText}>{q.text}</span>
-                                    {q.tooltip && (
-                                      <span className={styles.tooltipWrap} aria-label={q.tooltip}>
-                                        <span className={styles.tooltipIcon}>?</span>
-                                        <span className={styles.tooltipBody}>{q.tooltip}</span>
-                                      </span>
-                                    )}
-                                  </div>
-                                  {q.microcopy && <p className={styles.questionMicrocopy}>{q.microcopy}</p>}
-                                  <div className={styles.pillGroupWrap}>
-                                    {q.options.map(opt => (
-                                      <button
-                                        key={opt}
-                                        type="button"
-                                        className={`${styles.pill} ${
-                                          (q.multiSelect
-                                            ? Array.isArray(answers[q.id]) && answers[q.id].includes(opt)
-                                            : answers[q.id] === opt)
-                                            ? styles.pillActive : ''
-                                        }`}
-                                        onClick={() => q.multiSelect ? toggleMultiAnswer(q.id, opt) : setAnswer(q.id, opt)}
-                                      >
-                                        {opt}
-                                      </button>
-                                    ))}
-                                  </div>
-                                  {attempted && TOP_10_IDS.has(q.id) && (q.multiSelect ? !answers[q.id]?.length : !answers[q.id]) && (
-                                    <p className={styles.signalValidation}>This one's important — takes 10 seconds.</p>
-                                  )}
-                                </div>
-                                {q.id === TOGGLE_AFTER_ID && (
-                                  <>
-                                    {signalGroups.filter(g => g.heading === 'High-Level Signal').map(hls => (
-                                      <div key={hls.heading} className={styles.signalGroup}>
-                                        <p className={styles.signalGroupHeading}>{hls.heading}</p>
-                                        <div className={styles.questionList}>
-                                          {hls.questions.map(sq => (
-                                            <div key={sq.id} className={styles.signalQuestion}>
-                                              <div className={styles.questionHeader}>
-                                                <span className={styles.questionText}>{sq.text}</span>
-                                              </div>
-                                              <div className={styles.pillGroupWrap}>
-                                                {sq.options.map(opt => (
-                                                  <button
-                                                    key={opt}
-                                                    type="button"
-                                                    className={`${styles.pill} ${answers[sq.id] === opt ? styles.pillActive : ''}`}
-                                                    onClick={() => setAnswer(sq.id, opt)}
-                                                  >
-                                                    {opt}
-                                                  </button>
-                                                ))}
-                                              </div>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      </div>
-                                    ))}
-                                    <div className={styles.disclosureToggle}>
-                                      <p className={styles.toggleMicrocopy}>
-                                        {showAll
-                                          ? "These help paint the full picture — answer what you can, skip what doesn't apply."
-                                          : 'The more context you share, the more useful your review becomes for other professionals.'}
-                                      </p>
-                                      <button
-                                        type="button"
-                                        className={styles.toggleBtn}
-                                        onClick={() => setShowAll(s => !s)}
-                                      >
-                                        {showAll ? 'Show less' : 'Show all questions'}
-                                      </button>
-                                    </div>
-                                  </>
-                                )}
-                              </Fragment>
-                            )
-                          })}
+                          {optionalQs.map(q => (
+                            <div key={q.id} className={styles.signalQuestion}>
+                              <div className={styles.questionHeader}>
+                                <span className={styles.questionText}>{q.text}</span>
+                              </div>
+                              {q.microcopy && <p className={styles.questionMicrocopy}>{q.microcopy}</p>}
+                              <div className={styles.pillGroupWrap}>
+                                {q.options.map(opt => (
+                                  <button
+                                    key={opt}
+                                    type="button"
+                                    className={`${styles.pill} ${
+                                      (q.multiSelect
+                                        ? Array.isArray(answers[q.id]) && answers[q.id].includes(opt)
+                                        : answers[q.id] === opt)
+                                        ? styles.pillActive : ''
+                                    }`}
+                                    onClick={() => q.multiSelect ? toggleMultiAnswer(q.id, opt) : setAnswer(q.id, opt)}
+                                  >
+                                    {opt}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     )

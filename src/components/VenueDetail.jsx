@@ -269,9 +269,10 @@ export default function VenueDetail() {
   const [sortOrder, setSortOrder]       = useState('recent')
   const [showHowItWorks, setShowHowItWorks] = useState(false)
   const [showSignals, setShowSignals]       = useState(false)
-  const [activeTab, setActiveTab]           = useState('words')
+  const [showScores, setShowScores]         = useState(false)
   const mapRef = useRef(null)
 
+  const allRoles = [...new Set(reviews.map(r => r.role))]
   const filteredReviews = sortReviews(
     reviews.filter(r => !roleFilter || r.role === roleFilter),
     sortOrder
@@ -290,7 +291,7 @@ export default function VenueDetail() {
   }
 
   useEffect(() => {
-    if (activeTab !== 'track' || !mapRef.current) return
+    if (!mapRef.current) return
     const map = L.map(mapRef.current, {
       center: [venue.latitude, venue.longitude],
       zoom: 15,
@@ -304,7 +305,7 @@ export default function VenueDetail() {
       .addTo(map)
       .bindPopup(venue.name)
     return () => map.remove()
-  }, [activeTab])
+  }, [])
 
   return (
     <div className={styles.page}>
@@ -319,7 +320,7 @@ export default function VenueDetail() {
             <button
               type="button"
               className={styles.reviewCountLink}
-              onClick={() => setActiveTab('words')}
+              onClick={() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })}
             >
               {venue.reviewCount} reviews
             </button>
@@ -327,37 +328,28 @@ export default function VenueDetail() {
         </div>
       </div>
 
-      <div className={styles.tabBar}>
-        {[
-          { key: 'words', label: 'Their words' },
-          { key: 'signals', label: 'Signals' },
-          { key: 'track', label: 'Track record' },
-        ].map(tab => (
-          <button
-            key={tab.key}
-            type="button"
-            className={`${styles.tabBtn} ${activeTab === tab.key ? styles.tabBtnActive : ''}`}
-            onClick={() => setActiveTab(tab.key)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {activeTab === 'words' && (
-        <div id="reviews" className={styles.reviewSection}>
+      <div id="reviews" className={styles.reviewSection}>
           <div className={styles.inner}>
             <div className={styles.reviewListHeader}>
               <h2 className={styles.reviewListHeading}>All reviews</h2>
-              <select
-                className={styles.sortSelect}
-                value={sortOrder}
-                onChange={e => { setSortOrder(e.target.value); setVisibleCount(5) }}
-              >
-                <option value="recent">Most recent</option>
-                <option value="highest">Highest rated</option>
-                <option value="lowest">Lowest rated</option>
-              </select>
+              <div className={styles.reviewListControls}>
+                <button
+                  type="button"
+                  className={styles.overallScoresBtn}
+                  onClick={() => setShowScores(true)}
+                >
+                  Overall scores
+                </button>
+                <select
+                  className={styles.sortSelect}
+                  value={sortOrder}
+                  onChange={e => { setSortOrder(e.target.value); setVisibleCount(5) }}
+                >
+                  <option value="recent">Most recent</option>
+                  <option value="highest">Highest rated</option>
+                  <option value="lowest">Lowest rated</option>
+                </select>
+              </div>
             </div>
             <div className={styles.howItWorksRow}>
               <button
@@ -384,7 +376,7 @@ export default function VenueDetail() {
             <div className={styles.metaRow}>
               <div className={styles.metaLine}>
                 <span className={styles.reviewsFromLabel}>Reviews from:</span>
-                {venue.roles.map(r => (
+                {allRoles.map(r => (
                   <span
                     key={r}
                     className={`${styles.roleTag} ${roleFilter === r ? styles.roleTagActive : ''}`}
@@ -465,21 +457,16 @@ export default function VenueDetail() {
                                     </div>
                                   </div>
                                 ))}
-                                {optional.length > 0 && (
-                                  <>
-                                    <p className={styles.signalGroupLabel}>Additional signals</p>
-                                    {optional.map(signal => (
-                                      <div key={signal.name} className={styles.signalRow}>
-                                        <div className={styles.signalMeta}>
-                                          <div className={styles.signalName}>{signal.name}</div>
-                                          <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
-                                            {signal.answer}
-                                          </span>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </>
-                                )}
+                                {optional.map(signal => (
+                                  <div key={signal.name} className={styles.signalRow}>
+                                    <div className={styles.signalMeta}>
+                                      <div className={styles.signalName}>{signal.name}</div>
+                                      <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
+                                        {signal.answer}
+                                      </span>
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
                             )
                           })()}
@@ -516,12 +503,54 @@ export default function VenueDetail() {
               </>
             )}
           </div>
+      </div>
+
+      <div className={styles.mapSection}>
+        <div className={styles.inner}>
+          <h2 className={styles.mapHeading}>Where you'll find them</h2>
+          <p className={styles.mapAddress}>{venue.address}</p>
+          <div ref={mapRef} className={styles.mapContainer} />
+        </div>
+      </div>
+
+      {showSignals && (
+        <div
+          className={styles.modalOverlay}
+          onClick={e => { if (e.target === e.currentTarget) setShowSignals(false) }}
+        >
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>What are signals?</h2>
+              <button
+                type="button"
+                className={styles.modalClose}
+                onClick={() => setShowSignals(false)}
+              >✕</button>
+            </div>
+            {Object.entries(SIGNAL_QUESTIONS).map(([name, question]) => (
+              <div key={name} className={styles.signalExplainerRow}>
+                <p className={styles.signalExplainerName}>{name}</p>
+                <p className={styles.signalExplainerQuestion}>{question}</p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
-      {activeTab === 'signals' && (
-        <div className={styles.reviewSection}>
-          <div className={styles.inner}>
+      {showScores && (
+        <div
+          className={styles.modalOverlay}
+          onClick={e => { if (e.target === e.currentTarget) setShowScores(false) }}
+        >
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Overall scores</h2>
+              <button
+                type="button"
+                className={styles.modalClose}
+                onClick={() => setShowScores(false)}
+              >✕</button>
+            </div>
             <div className={styles.statRow}>
               <div className={styles.stat}>
                 <span className={styles.statValue}>{venue.reviewCount}</span>
@@ -553,40 +582,6 @@ export default function VenueDetail() {
                     style={{ width: `${(signal.score / 5) * 100}%` }}
                   />
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'track' && (
-        <div className={styles.mapSection}>
-          <div className={styles.inner}>
-            <h2 className={styles.mapHeading}>Where you'll find them</h2>
-            <p className={styles.mapAddress}>{venue.address}</p>
-            <div ref={mapRef} className={styles.mapContainer} />
-          </div>
-        </div>
-      )}
-
-      {showSignals && (
-        <div
-          className={styles.modalOverlay}
-          onClick={e => { if (e.target === e.currentTarget) setShowSignals(false) }}
-        >
-          <div className={styles.modalContent}>
-            <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>What are signals?</h2>
-              <button
-                type="button"
-                className={styles.modalClose}
-                onClick={() => setShowSignals(false)}
-              >✕</button>
-            </div>
-            {Object.entries(SIGNAL_QUESTIONS).map(([name, question]) => (
-              <div key={name} className={styles.signalExplainerRow}>
-                <p className={styles.signalExplainerName}>{name}</p>
-                <p className={styles.signalExplainerQuestion}>{question}</p>
               </div>
             ))}
           </div>
