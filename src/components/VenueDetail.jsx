@@ -6,8 +6,8 @@ import styles from './VenueDetail.module.css'
 const MOCK_VENUE = {
   id: 'the-anchor-and-rail',
   name: 'The Anchor & Rail',
-  neighbourhood: 'Fitzroy',
-  city: 'Melbourne',
+  neighbourhood: 'Capitol Hill',
+  city: 'Seattle',
   overallScore: 2.7,
   reviewCount: 8,
   verified: true,
@@ -193,6 +193,13 @@ function aggregateSignals(reviews) {
     .sort((a, b) => b.score - a.score)
 }
 
+function sortReviews(reviews, order) {
+  const sorted = [...reviews]
+  if (order === 'highest') sorted.sort((a, b) => b.overallScore - a.overallScore)
+  if (order === 'lowest')  sorted.sort((a, b) => a.overallScore - b.overallScore)
+  return sorted
+}
+
 function scrollToReviews(e) {
   e.preventDefault()
   document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })
@@ -266,8 +273,14 @@ export default function VenueDetail() {
   const [visibleCount, setVisibleCount] = useState(5)
   const [roleFilter, setRoleFilter]     = useState(null)
   const [showQuestions, setShowQuestions] = useState(false)
+  const [showTrackRecord, setShowTrackRecord] = useState(false)
+  const [sortOrder, setSortOrder] = useState('recent')
+  const [showHowItWorks, setShowHowItWorks] = useState(false)
 
-  const filteredReviews = reviews.filter(r => !roleFilter || r.role === roleFilter)
+  const filteredReviews = sortReviews(
+    reviews.filter(r => !roleFilter || r.role === roleFilter),
+    sortOrder
+  )
   const mostRecent   = reviews[0]
   const aggregated   = aggregateSignals(reviews)
   const recommendPct = Math.round(
@@ -309,7 +322,6 @@ export default function VenueDetail() {
               {[
                 { key: 'words',   label: 'Their words' },
                 { key: 'signals', label: 'Signals' },
-                { key: 'track',   label: 'Track record' },
               ].map(tab => (
                 <button
                   key={tab.key}
@@ -340,7 +352,7 @@ export default function VenueDetail() {
                     <p className={styles.wordsBody}>{mostRecent.tellFriend}</p>
                   </div>
                 )}
-                <p className={styles.wordsAttribution}>{mostRecent.role} · {mostRecent.recency}</p>
+                <p className={styles.wordsAttribution}>{mostRecent.role} · {mostRecent.experienceDuration} · Worked there {mostRecent.whenWorked.toLowerCase()} · {mostRecent.recency}</p>
               </div>
             )}
 
@@ -348,14 +360,14 @@ export default function VenueDetail() {
               const { required, optional } = sortSignals([...mostRecent.signals])
               return (
                 <div className={styles.tabContent}>
-                  <div className={styles.signalGroupHeaderRow}>
+                  <div>
                     <p className={styles.signalGroupLabel}>Key signals</p>
                     <button
                       type="button"
                       className={styles.showQuestionsBtn}
                       onClick={() => setShowQuestions(s => !s)}
                     >
-                      {showQuestions ? 'Hide questions' : 'Show questions'}
+                      {showQuestions ? 'Hide questions' : 'Show full questions'}
                     </button>
                   </div>
                   {required.map(signal => (
@@ -404,59 +416,95 @@ export default function VenueDetail() {
               )
             })()}
 
-            {activeTab === 'track' && (
-              <div className={styles.tabContent}>
-                <div className={styles.statRow}>
-                  <div className={styles.stat}>
-                    <a href="#reviews" className={styles.statValue} onClick={scrollToReviews}>
-                      {venue.reviewCount}
-                    </a>
-                    <span className={styles.statLabel}>reviews</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Track record (collapsible) ── */}
+      <div className={styles.trackRecordSection}>
+        <div className={styles.inner}>
+          <button
+            type="button"
+            className={styles.trackRecordToggle}
+            onClick={() => setShowTrackRecord(s => !s)}
+          >
+            <span>Venue track record</span>
+            <span className={styles.trackRecordChevron}>
+              {showTrackRecord ? '▲' : '▼'}
+            </span>
+          </button>
+          {showTrackRecord && (
+            <div className={styles.trackRecordContent}>
+              <div className={styles.statRow}>
+                <div className={styles.stat}>
+                  <a href="#reviews" className={styles.statValue} onClick={scrollToReviews}>
+                    {venue.reviewCount}
+                  </a>
+                  <span className={styles.statLabel}>reviews</span>
+                </div>
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>{venue.overallScore.toFixed(1)}</span>
+                  <span className={styles.statLabel}>overall</span>
+                </div>
+                <div className={styles.stat}>
+                  <span className={styles.statValue}>{recommendPct}%</span>
+                  <span className={styles.statLabel}>would recommend</span>
+                </div>
+              </div>
+              <p className={styles.trackRecordNote}>
+                Averages across all {venue.reviewCount} reviews, highest to lowest.
+              </p>
+              {aggregated.map(signal => (
+                <div key={signal.name} className={styles.signalRow}>
+                  <div className={styles.signalMeta}>
+                    <span className={styles.signalName}>{signal.name}</span>
+                    <span className={`${styles.signalScore} ${styles[signalTier(signal.score)]}`}>
+                      {signal.score.toFixed(1)}
+                    </span>
                   </div>
-                  <div className={styles.stat}>
-                    <span className={styles.statValue}>{venue.overallScore.toFixed(1)}</span>
-                    <span className={styles.statLabel}>overall</span>
-                  </div>
-                  <div className={styles.stat}>
-                    <span className={styles.statValue}>{recommendPct}%</span>
-                    <span className={styles.statLabel}>would recommend</span>
+                  <div className={styles.barTrack}>
+                    <div
+                      className={`${styles.barFill} ${barClass(signal.score, styles)}`}
+                      style={{ width: `${(signal.score / 5) * 100}%` }}
+                    />
                   </div>
                 </div>
-                <p className={styles.trackRecordNote}>
-                  Averages across all {venue.reviewCount} reviews, highest to lowest.
-                </p>
-                {aggregated.map(signal => (
-                  <div key={signal.name} className={styles.signalRow}>
-                    <div className={styles.signalMeta}>
-                      <span className={styles.signalName}>{signal.name}</span>
-                      <span className={`${styles.signalScore} ${styles[signalTier(signal.score)]}`}>
-                        {signal.score.toFixed(1)}
-                      </span>
-                    </div>
-                    <div className={styles.barTrack}>
-                      <div
-                        className={`${styles.barFill} ${barClass(signal.score, styles)}`}
-                        style={{ width: `${(signal.score / 5) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
       {/* ── Review list ── */}
       <div id="reviews" className={styles.reviewSection}>
         <div className={styles.inner}>
-          <div className={styles.metaRow}>
-            {venue.verified && (
-              <div className={styles.metaLine}>
-                <span className={styles.verifiedBadge}>Verified</span>
+          <div className={styles.reviewListHeader}>
+            <h2 className={styles.reviewListHeading}>All reviews</h2>
+            <select
+              className={styles.sortSelect}
+              value={sortOrder}
+              onChange={e => { setSortOrder(e.target.value); setVisibleCount(5) }}
+            >
+              <option value="recent">Most recent</option>
+              <option value="highest">Highest rated</option>
+              <option value="lowest">Lowest rated</option>
+            </select>
+          </div>
+          <div className={styles.howItWorksRow}>
+            <button
+              type="button"
+              className={styles.howItWorksBtn}
+              onClick={() => setShowHowItWorks(s => !s)}
+            >
+              How House Rules reviews work{showHowItWorks ? ' ▲' : ' ↗'}
+            </button>
+            {showHowItWorks && (
+              <div className={styles.howItWorksContent}>
+                <p>Every review on House Rules is written by a hospitality professional who actually worked at this venue. Reviews include structured signals — specific answers about pay, management, culture, and scheduling — alongside the reviewer's own words. All reviews are verified and anonymous. Your name never appears on your review.</p>
               </div>
             )}
+          </div>
+          <div className={styles.metaRow}>
             <div className={styles.metaLine}>
               <span className={styles.reviewsFromLabel}>Reviews from:</span>
               {venue.roles.map(r => (
@@ -469,7 +517,6 @@ export default function VenueDetail() {
               ))}
             </div>
           </div>
-          <h2 className={styles.reviewListHeading}>All reviews</h2>
           {roleFilter && (
             <div className={styles.filterChip}>
               Showing: {roleFilter} reviews

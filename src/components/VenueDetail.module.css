@@ -146,12 +146,10 @@ a.statValue:hover { text-decoration: underline; }
 .reviewSection { padding: 0 24px 88px; }
 .reviewListHeading {
   font-family: var(--font-serif);
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: -0.015em;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--color-border);
+  margin: 0;
 }
 .reviewList { display: flex; flex-direction: column; }
 .reviewRow { border-bottom: 1px solid var(--color-border-subtle); }
@@ -176,7 +174,7 @@ a.statValue:hover { text-decoration: underline; }
   text-align: left;
 }
 .reviewRowLeft { flex: 1; }
-.reviewRole { display: block; font-size: 0.875rem; font-weight: 600; color: var(--color-text); letter-spacing: -0.01em; margin-bottom: 2px; }
+.reviewRole { display: block; font-size: 0.9375rem; font-weight: 600; color: var(--color-text); letter-spacing: -0.01em; margin-bottom: 2px; }
 .reviewRowMeta { display: block; font-size: 0.75rem; color: var(--color-text-faint); letter-spacing: -0.005em; margin-bottom: 6px; }
 .reviewExcerpt {
   font-size: 0.875rem;
@@ -325,14 +323,8 @@ a.statValue:hover { text-decoration: underline; }
   letter-spacing: -0.005em;
 }
 
-.signalGroupHeaderRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-.signalGroupHeaderRow .signalGroupLabel { margin-bottom: 0; }
 .showQuestionsBtn {
+  display: block;
   font-size: 0.75rem;
   color: var(--color-cta);
   background: none;
@@ -340,6 +332,7 @@ a.statValue:hover { text-decoration: underline; }
   cursor: pointer;
   padding: 0;
   letter-spacing: -0.005em;
+  margin-bottom: 8px;
 }
 .showQuestionsBtn:hover { text-decoration: underline; }
 .signalQuestion {
@@ -364,7 +357,10 @@ a.statValue:hover { text-decoration: underline; }
   margin: 16px 0 12px;
 }
 .signalDividerLabel {
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
   color: var(--color-text-faint);
   white-space: nowrap;
 }
@@ -374,6 +370,72 @@ a.statValue:hover { text-decoration: underline; }
   flex: 1;
   height: 1px;
   background: var(--color-border);
+}
+
+/* Track record collapsible */
+.trackRecordSection {
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  margin: 0 0 32px;
+}
+.trackRecordToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+  font-family: var(--font-sans);
+}
+.trackRecordToggle:hover { color: var(--color-cta); }
+.trackRecordChevron { font-size: 0.75rem; color: var(--color-text-faint); }
+.trackRecordContent { padding: 0 0 20px; }
+
+/* Review list header */
+.reviewListHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.sortSelect {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  cursor: pointer;
+  letter-spacing: -0.005em;
+}
+.howItWorksRow { margin-bottom: 20px; }
+.howItWorksBtn {
+  font-size: 0.8125rem;
+  color: var(--color-cta);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: -0.005em;
+}
+.howItWorksBtn:hover { text-decoration: underline; }
+.howItWorksContent {
+  margin-top: 10px;
+  padding: 14px 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  line-height: 1.65;
+  letter-spacing: -0.008em;
 }
 
 @media (max-width: 600px) {
