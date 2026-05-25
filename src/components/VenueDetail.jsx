@@ -272,6 +272,7 @@ export default function VenueDetail() {
   const [showScores, setShowScores]         = useState(false)
   const mapRef = useRef(null)
   const pendingScrollRef = useRef(null)
+  const cardRefs = useRef({})
 
   const allRoles = [...new Set(reviews.map(r => r.role))]
   const filteredReviews = sortReviews(
@@ -283,10 +284,23 @@ export default function VenueDetail() {
     (reviews.filter(r => r.wouldRecommend).length / reviews.length) * 100
   )
 
-  function toggleExpanded(reviewId) {
+  function handleExpand(reviewId) {
+    const card = cardRefs.current[reviewId]
+    if (card) {
+      pendingScrollRef.current = window.scrollY + card.getBoundingClientRect().top
+    }
     setExpanded(prev => {
       const next = new Set(prev)
-      next.has(reviewId) ? next.delete(reviewId) : next.add(reviewId)
+      next.add(reviewId)
+      return next
+    })
+  }
+
+  function handleCollapse(reviewId) {
+    pendingScrollRef.current = null
+    setExpanded(prev => {
+      const next = new Set(prev)
+      next.delete(reviewId)
       return next
     })
   }
@@ -314,8 +328,9 @@ export default function VenueDetail() {
 
   useEffect(() => {
     if (pendingScrollRef.current === null) return
-    window.scrollTo({ top: pendingScrollRef.current - 80, behavior: 'smooth' })
+    const top = pendingScrollRef.current
     pendingScrollRef.current = null
+    window.scrollTo({ top: top - 80, behavior: 'smooth' })
   }, [expanded])
 
   return (
@@ -416,16 +431,16 @@ export default function VenueDetail() {
               <>
                 <div className={styles.reviewList}>
                   {filteredReviews.slice(0, visibleCount).map(review => (
-                    <div key={review.id} id={`review-${review.id}`} className={`${styles.reviewRow} ${expanded.has(review.id) ? styles.reviewRowExpanded : ''}`}>
+                    <div key={review.id} id={`review-${review.id}`} ref={el => { cardRefs.current[review.id] = el }} className={`${styles.reviewRow} ${expanded.has(review.id) ? styles.reviewRowExpanded : ''}`}>
                       <button
                         type="button"
                         className={styles.reviewRowHeader}
                         onClick={() => {
-                          if (!expanded.has(review.id)) {
-                            const row = document.getElementById(`review-${review.id}`)
-                            if (row) pendingScrollRef.current = window.scrollY + row.getBoundingClientRect().top
+                          if (expanded.has(review.id)) {
+                            handleCollapse(review.id)
+                          } else {
+                            handleExpand(review.id)
                           }
-                          toggleExpanded(review.id)
                         }}
                         aria-expanded={expanded.has(review.id)}
                       >
@@ -490,7 +505,7 @@ export default function VenueDetail() {
                           <button
                             type="button"
                             className={styles.collapseLink}
-                            onClick={() => { pendingScrollRef.current = null; toggleExpanded(review.id) }}
+                            onClick={() => handleCollapse(review.id)}
                           >
                             Show less
                           </button>
