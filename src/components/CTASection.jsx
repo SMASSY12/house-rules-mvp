@@ -4,15 +4,15 @@ export default function CTASection() {
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>Share your experience</p>
+        <p className={styles.eyebrow}>Been there?</p>
         <h2 className={styles.title}>
-          Help the next industry professional know what to expect.
+          Tell the next person what you wish you'd known.
         </h2>
         <p className={styles.body}>
-          Honest, structured reviews from people who've been there. Takes less than 5 minutes and makes a real difference for someone trying to make a smart decision.
+          Your honest review helps hospitality professionals find workplaces that treat them right. Takes a few minutes. Stays anonymous.
         </p>
-        <a href="#write" className={styles.btn}>Write a Review</a>
-        <p className={styles.note}>Reviews are tied to a real account to protect workers and ensure credibility.</p>
+        <a href="/write" className={styles.btn}>Write a review</a>
+        <p className={styles.note}>Your name never appears on your review.</p>
       </div>
     </section>
   )

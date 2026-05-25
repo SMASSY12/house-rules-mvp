@@ -3,18 +3,18 @@ import styles from './HowItWorks.module.css'
 const steps = [
   {
     number: '01',
-    title: 'Search before you commit',
-    body: 'Find any restaurant, bar, or hotel by name. See real signals on pay, culture, management, and safety before you apply or accept.',
+    title: 'Find the place',
+    body: 'Search any bar, restaurant, or café by name or neighbourhood. See who's reviewed it and what role they held.',
   },
   {
     number: '02',
-    title: 'Read structured signals',
-    body: 'Every review captures what job posts skip: pay reliability, scheduling, management behavior, team culture, and more — reported by people who did the job.',
+    title: 'Read what the job post left out',
+    body: 'Every review includes structured signals — verified answers on pay reliability, tip transparency, management behavior, scheduling, and more. Not vibes. Data.',
   },
   {
     number: '03',
-    title: 'Leave a review',
-    body: "Worked somewhere? Leave a review and help the next worker understand what they're walking into. It takes a few minutes.",
+    title: 'Give the next person a head start',
+    body: 'Worked somewhere? Leave a review. It takes a few minutes, stays completely anonymous, and helps the next professional find the right fit.',
   },
 ]
 
@@ -38,33 +38,26 @@ export default function HowItWorks() {
           ))}
         </div>
         <div className={styles.signalsPreview}>
-          <p className={styles.signalsLabel}>Signals tracked across every review</p>
+          <p className={styles.signalsLabel}>Inside every review</p>
           <div className={styles.signalList}>
             {[
-              'Pay Reliability',
-              'Tip Transparency',
-              'Benefits',
-              'Shift Meal',
-              'Scheduling',
-              'Off-the-clock Expectations',
-              'Training',
-              'Uniforms',
-              'Cleanliness',
-              'Safety',
-              'Management',
-              'Shift Fairness',
-              'Feedback Response',
-              'Guest Culture',
+              'Pay consistency',
+              'Tip transparency',
+              'Management overall',
+              'Management under pressure',
               'Turnover',
-              'Management on Bad Nights',
-              'Voice Safety',
-              'Team Support',
-              'Growth Opportunities',
-              'Why People Leave',
+              'Staff culture',
+              'Scheduling',
+              'Safe to speak up',
+              'Fair treatment',
+              'Feedback response',
             ].map((s) => (
               <span key={s} className={styles.signalChip}>{s}</span>
             ))}
           </div>
+          <p className={styles.signalsMore}>
+            Plus 17 more signals across every review — from shift meals to BOH/FOH dynamics.
+          </p>
         </div>
       </div>
     </section>

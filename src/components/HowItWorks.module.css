@@ -96,6 +96,13 @@
   color: var(--color-text);
 }
 
+.signalsMore {
+  font-size: 0.875rem;
+  color: var(--color-text-faint);
+  margin-top: 12px;
+  letter-spacing: -0.005em;
+}
+
 @media (max-width: 680px) {
   .grid {
     grid-template-columns: 1fr;

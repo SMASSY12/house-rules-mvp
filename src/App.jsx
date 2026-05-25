@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import Nav from './components/Nav'
 import Hero from './components/Hero'
-import ReviewsSection from './components/ReviewsSection'
+import FeaturedVenues from './components/FeaturedVenues'
 import HowItWorks from './components/HowItWorks'
 import CTASection from './components/CTASection'
 import WriteReview from './components/WriteReview'
@@ -18,13 +18,13 @@ export default function App() {
           <main>
             <Hero />
             <HowItWorks />
-            <ReviewsSection />
+            <FeaturedVenues />
             <CTASection />
-            <WriteReview />
           </main>
         } />
         <Route path="/venue/:id" element={<VenueDetail />} />
         <Route path="/reviews" element={<ReviewsPage />} />
+        <Route path="/write" element={<WriteReview />} />
       </Routes>
       <Footer />
     </>
