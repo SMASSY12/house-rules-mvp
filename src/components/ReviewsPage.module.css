@@ -1,0 +1,219 @@
+.page { background: var(--color-bg); min-height: 100vh; }
+.inner { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+
+.pageHeader {
+  padding: 60px 24px 40px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+.pageTitle {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.pageSubtitle {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  letter-spacing: -0.008em;
+}
+
+.controlsBar {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+.searchRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.searchInput {
+  flex: 1;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  letter-spacing: -0.008em;
+  outline: none;
+}
+.searchInput:focus {
+  border-color: var(--color-cta);
+}
+.viewToggle {
+  display: flex;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.toggleBtn {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  letter-spacing: -0.005em;
+  transition: background 0.15s, color 0.15s;
+}
+.toggleActive {
+  background: var(--color-cta);
+  color: #fff;
+}
+
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.filterLabel {
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+  letter-spacing: -0.005em;
+  margin-right: 2px;
+}
+.filterChip {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  cursor: pointer;
+  letter-spacing: -0.005em;
+  transition: all 0.15s;
+}
+.filterChip:hover {
+  border-color: var(--color-text-faint);
+}
+.filterChipActive {
+  background: var(--color-cta);
+  color: #fff;
+  border-color: var(--color-cta);
+}
+.clearFilter {
+  font-size: 0.75rem;
+  color: var(--color-cta);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  text-decoration: underline;
+  letter-spacing: -0.005em;
+}
+
+.resultsCount {
+  font-size: 0.8125rem;
+  color: var(--color-text-faint);
+  letter-spacing: -0.005em;
+  padding: 16px 0 8px;
+}
+
+.venueList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 64px;
+}
+.venueCard {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  transition: border-color 0.15s;
+}
+.venueCard:hover {
+  border-color: var(--color-text-faint);
+}
+.cardMain {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.cardLeft { flex: 1; }
+.venueName {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-bottom: 4px;
+  color: var(--color-text);
+}
+.venueMeta {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  letter-spacing: -0.008em;
+  margin-bottom: 10px;
+}
+.roleTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.roleTag {
+  font-size: 0.6875rem;
+  color: var(--color-text-faint);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 2px 7px;
+  letter-spacing: -0.005em;
+}
+.cardRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.score {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+.reviewCount {
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+  letter-spacing: -0.005em;
+}
+.recommend {
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+  letter-spacing: -0.005em;
+}
+
+.emptyState {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  padding: 48px 0;
+  text-align: center;
+}
+
+.mapContainer {
+  height: calc(100vh - 280px);
+  min-height: 400px;
+}
+
+@media (max-width: 600px) {
+  .cardMain { flex-direction: column; }
+  .cardRight {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+  .score { font-size: 1.25rem; }
+}

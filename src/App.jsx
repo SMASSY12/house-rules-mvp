@@ -7,6 +7,7 @@ import CTASection from './components/CTASection'
 import WriteReview from './components/WriteReview'
 import Footer from './components/Footer'
 import VenueDetail from './components/VenueDetail'
+import ReviewsPage from './components/ReviewsPage'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           </main>
         } />
         <Route path="/venue/:id" element={<VenueDetail />} />
+        <Route path="/reviews" element={<ReviewsPage />} />
       </Routes>
       <Footer />
     </>
