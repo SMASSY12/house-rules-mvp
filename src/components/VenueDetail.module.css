@@ -448,6 +448,60 @@ a.statValue:hover { text-decoration: underline; }
   overflow: hidden;
 }
 
+/* Tabs */
+.tabBar {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: 0 24px;
+}
+.tabBtn {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 14px 16px;
+  cursor: pointer;
+  letter-spacing: -0.008em;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+}
+.tabBtn:hover { color: var(--color-text); }
+.tabBtnActive {
+  color: var(--color-text);
+  border-bottom-color: var(--color-cta);
+  font-weight: 600;
+}
+
+/* Empty state */
+.emptyState {
+  padding: 48px 0;
+  text-align: center;
+}
+.emptyStateText {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  letter-spacing: -0.008em;
+  margin-bottom: 16px;
+}
+.emptyStateCta {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  background: var(--color-cta);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 11px 24px;
+  text-decoration: none;
+  transition: background 0.2s;
+  letter-spacing: -0.01em;
+}
+.emptyStateCta:hover { background: var(--color-cta-hover); }
+
 @media (max-width: 600px) {
   .statRow { gap: 20px; }
   .statValue { font-size: 1.25rem; }

@@ -9,7 +9,7 @@ export default function Hero() {
           Where professionals go before they say yes.
         </h1>
         <p className={styles.subhead}>
-          Verified reviews from people who actually worked the shifts. Pay, management, culture, scheduling — the stuff job posts never tell you.
+          Verified reviews from people who worked the shifts. Pay, management, culture, scheduling — the stuff job posts never tell you.
         </p>
         <div className={styles.actions}>
           <a href="/reviews" className={styles.btnPrimary}>Read reviews</a>

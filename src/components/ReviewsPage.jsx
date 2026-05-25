@@ -153,7 +153,7 @@ export default function ReviewsPage() {
           <div className={styles.venueList}>
             {filteredVenues.length === 0 ? (
               <p className={styles.emptyState}>
-                No results. Try a different search or clear the filter.
+                No businesses match "{searchTerm}" — try a different search.
               </p>
             ) : (
               filteredVenues.map(venue => (

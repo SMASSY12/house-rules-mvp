@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { MOCK_VENUES } from '../data/venues'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -200,11 +200,6 @@ function sortReviews(reviews, order) {
   return sorted
 }
 
-function scrollToReviews(e) {
-  e.preventDefault()
-  document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })
-}
-
 const REQUIRED_SIGNALS = new Set([
   'Pay consistency', 'Tip transparency',
   'Management overall', 'Management under pressure',
@@ -271,10 +266,10 @@ export default function VenueDetail() {
   const [expanded, setExpanded]         = useState(new Set())
   const [visibleCount, setVisibleCount] = useState(5)
   const [roleFilter, setRoleFilter]     = useState(null)
-  const [showScores, setShowScores]     = useState(false)
   const [sortOrder, setSortOrder]       = useState('recent')
   const [showHowItWorks, setShowHowItWorks] = useState(false)
   const [showSignals, setShowSignals]       = useState(false)
+  const [activeTab, setActiveTab]           = useState('words')
   const mapRef = useRef(null)
 
   const filteredReviews = sortReviews(
@@ -295,7 +290,7 @@ export default function VenueDetail() {
   }
 
   useEffect(() => {
-    if (!mapRef.current) return
+    if (activeTab !== 'track' || !mapRef.current) return
     const map = L.map(mapRef.current, {
       center: [venue.latitude, venue.longitude],
       zoom: 15,
@@ -309,12 +304,11 @@ export default function VenueDetail() {
       .addTo(map)
       .bindPopup(venue.name)
     return () => map.remove()
-  }, [])
+  }, [activeTab])
 
   return (
     <div className={styles.page}>
 
-      {/* ── Venue header ── */}
       <div className={styles.headerSection}>
         <div className={styles.inner}>
           <h1 className={styles.venueName}>{venue.name}</h1>
@@ -322,26 +316,39 @@ export default function VenueDetail() {
           <div className={styles.scoreRow}>
             <span className={styles.scoreNumber}>{venue.overallScore.toFixed(1)}</span>
             <StarRating rating={venue.overallScore} />
-            <a href="#reviews" className={styles.reviewCountLink} onClick={scrollToReviews}>
+            <button
+              type="button"
+              className={styles.reviewCountLink}
+              onClick={() => setActiveTab('words')}
+            >
               {venue.reviewCount} reviews
-            </a>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* ── Review list ── */}
-      <div id="reviews" className={styles.reviewSection}>
-        <div className={styles.inner}>
-          <div className={styles.reviewListHeader}>
-            <h2 className={styles.reviewListHeading}>All reviews</h2>
-            <div className={styles.reviewListControls}>
-              <button
-                type="button"
-                className={styles.overallScoresBtn}
-                onClick={() => setShowScores(true)}
-              >
-                Overall scores
-              </button>
+      <div className={styles.tabBar}>
+        {[
+          { key: 'words', label: 'Their words' },
+          { key: 'signals', label: 'Signals' },
+          { key: 'track', label: 'Track record' },
+        ].map(tab => (
+          <button
+            key={tab.key}
+            type="button"
+            className={`${styles.tabBtn} ${activeTab === tab.key ? styles.tabBtnActive : ''}`}
+            onClick={() => setActiveTab(tab.key)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'words' && (
+        <div id="reviews" className={styles.reviewSection}>
+          <div className={styles.inner}>
+            <div className={styles.reviewListHeader}>
+              <h2 className={styles.reviewListHeading}>All reviews</h2>
               <select
                 className={styles.sortSelect}
                 value={sortOrder}
@@ -352,212 +359,172 @@ export default function VenueDetail() {
                 <option value="lowest">Lowest rated</option>
               </select>
             </div>
-          </div>
-          <div className={styles.howItWorksRow}>
-            <button
-              type="button"
-              className={styles.howItWorksBtn}
-              onClick={() => setShowHowItWorks(s => !s)}
-            >
-              How House Rules reviews work{showHowItWorks ? ' ▲' : ' ↗'}
-            </button>
-            {showHowItWorks && (
-              <div className={styles.howItWorksContent}>
-                <p>Every review on House Rules is written by a hospitality professional who actually worked at this business. Reviews include{' '}
+            <div className={styles.howItWorksRow}>
+              <button
+                type="button"
+                className={styles.howItWorksBtn}
+                onClick={() => setShowHowItWorks(s => !s)}
+              >
+                How House Rules reviews work{showHowItWorks ? ' ▲' : ' ↗'}
+              </button>
+              {showHowItWorks && (
+                <div className={styles.howItWorksContent}>
+                  <p>Every review on House Rules is written by a hospitality professional who worked at this business. Reviews include{' '}
+                  <button
+                    type="button"
+                    className={styles.inlineLink}
+                    onClick={() => setShowSignals(true)}
+                  >
+                    structured signals
+                  </button>
+                  {' '}— specific, categorized answers about pay, management, culture, and scheduling — alongside the reviewer's own words. All reviews are verified and anonymous. Your name never appears on your review.</p>
+                </div>
+              )}
+            </div>
+            <div className={styles.metaRow}>
+              <div className={styles.metaLine}>
+                <span className={styles.reviewsFromLabel}>Reviews from:</span>
+                {venue.roles.map(r => (
+                  <span
+                    key={r}
+                    className={`${styles.roleTag} ${roleFilter === r ? styles.roleTagActive : ''}`}
+                    onClick={() => setRoleFilter(prev => prev === r ? null : r)}
+                    style={{ cursor: 'pointer' }}
+                  >{r}</span>
+                ))}
+              </div>
+            </div>
+            {roleFilter && (
+              <div className={styles.filterChip}>
+                Showing: {roleFilter} reviews
                 <button
                   type="button"
-                  className={styles.inlineLink}
-                  onClick={() => setShowSignals(true)}
-                >
-                  structured signals
-                </button>
-                {' '}— specific, categorized answers about pay, management, culture, and scheduling — alongside the reviewer's own words. All reviews are verified and anonymous. Your name never appears on your review.</p>
+                  className={styles.filterClear}
+                  onClick={() => setRoleFilter(null)}
+                >Clear</button>
               </div>
             )}
-          </div>
-          <div className={styles.metaRow}>
-            <div className={styles.metaLine}>
-              <span className={styles.reviewsFromLabel}>Reviews from:</span>
-              {venue.roles.map(r => (
-                <span
-                  key={r}
-                  className={`${styles.roleTag} ${roleFilter === r ? styles.roleTagActive : ''}`}
-                  onClick={() => setRoleFilter(prev => prev === r ? null : r)}
-                  style={{ cursor: 'pointer' }}
-                >{r}</span>
-              ))}
-            </div>
-          </div>
-          {roleFilter && (
-            <div className={styles.filterChip}>
-              Showing: {roleFilter} reviews
-              <button
-                type="button"
-                className={styles.filterClear}
-                onClick={() => setRoleFilter(null)}
-              >Clear</button>
-            </div>
-          )}
-          <div className={styles.reviewList}>
-            {filteredReviews.slice(0, visibleCount).map(review => (
-              <div key={review.id} id={`review-${review.id}`} className={`${styles.reviewRow} ${expanded.has(review.id) ? styles.reviewRowExpanded : ''}`}>
-                <button
-                  type="button"
-                  className={styles.reviewRowHeader}
-                  onClick={() => toggleExpanded(review.id)}
-                  aria-expanded={expanded.has(review.id)}
-                >
-                  <div className={styles.reviewRowLeft}>
-                    <span className={styles.reviewRole}>{review.role}</span>
-                    <span className={styles.reviewRowMeta}>Reviewed {review.recency}</span>
-                    <p className={styles.reviewExcerpt}>{review.wishKnown}</p>
-                    <span className={styles.expandLink}>
-                      {expanded.has(review.id) ? 'Show less' : 'Read full review'}
-                    </span>
-                  </div>
-                  <div className={styles.reviewRowRight}>
-                    <span className={styles.scoreLabel}>Their score</span>
-                    <span className={styles.reviewScore}>{review.overallScore.toFixed(1)}</span>
-                  </div>
-                </button>
-                {expanded.has(review.id) && (
-                  <div className={styles.reviewExpanded}>
-                    <div className={styles.expandedMeta}>
-                      <span>Worked there {review.whenWorked.toLowerCase()}</span>
-                      <span>There for {review.experienceDuration}</span>
-                      <span>Reviewed {review.recency}</span>
-                    </div>
-                    <div className={styles.wordsBlock}>
-                      <p className={styles.wordsLabel}>What they wish they'd known</p>
-                      <p className={styles.wordsBody}>{review.wishKnown}</p>
-                    </div>
-                    {review.tellFriend && (
-                      <div className={styles.wordsBlock}>
-                        <p className={styles.wordsLabel}>What they'd tell a friend</p>
-                        <p className={styles.wordsBody}>{review.tellFriend}</p>
-                      </div>
-                    )}
-                    {(() => {
-                      const { required, optional } = sortSignals([...review.signals])
-                      return (
-                        <div className={styles.expandedSignals}>
-                          <p className={styles.signalGroupLabel}>Key signals</p>
-                          {required.map(signal => (
-                            <div key={signal.name} className={styles.signalRow}>
-                              <div className={styles.signalMeta}>
-                                <div className={styles.signalName}>
-                                  {signal.name}
-                                </div>
-                                <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
-                                  {signal.answer}
-                                </span>
-                              </div>
-                            </div>
-                          ))}
-                          {optional.length > 0 && (
-                            <>
-                              <p className={styles.signalGroupLabel}>Additional signals</p>
-                              {optional.map(signal => (
-                                <div key={signal.name} className={styles.signalRow}>
-                                  <div className={styles.signalMeta}>
-                                    <div className={styles.signalName}>
-                                      {signal.name}
-                                    </div>
-                                    <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
-                                      {signal.answer}
-                                    </span>
-                                  </div>
-                                </div>
-                              ))}
-                            </>
-                          )}
+            {filteredReviews.length === 0 ? (
+              <div className={styles.emptyState}>
+                <p className={styles.emptyStateText}>No reviews yet — be the first.</p>
+                <Link to="/write" className={styles.emptyStateCta}>Write a review</Link>
+              </div>
+            ) : (
+              <>
+                <div className={styles.reviewList}>
+                  {filteredReviews.slice(0, visibleCount).map(review => (
+                    <div key={review.id} id={`review-${review.id}`} className={`${styles.reviewRow} ${expanded.has(review.id) ? styles.reviewRowExpanded : ''}`}>
+                      <button
+                        type="button"
+                        className={styles.reviewRowHeader}
+                        onClick={() => toggleExpanded(review.id)}
+                        aria-expanded={expanded.has(review.id)}
+                      >
+                        <div className={styles.reviewRowLeft}>
+                          <span className={styles.reviewRole}>{review.role}</span>
+                          <span className={styles.reviewRowMeta}>Reviewed {review.recency}</span>
+                          <p className={styles.reviewExcerpt}>{review.wishKnown}</p>
+                          <span className={styles.expandLink}>
+                            {expanded.has(review.id) ? 'Show less' : 'Read full review'}
+                          </span>
                         </div>
-                      )
-                    })()}
-                    <button
-                      type="button"
-                      className={styles.collapseLink}
-                      onClick={() => {
-                        const row = document.getElementById(`review-${review.id}`)
-                        const targetY = row
-                          ? window.scrollY + row.getBoundingClientRect().top - 80
-                          : window.scrollY
-                        toggleExpanded(review.id)
-                        requestAnimationFrame(() => {
-                          window.scrollTo({ top: targetY, behavior: 'instant' })
-                        })
-                      }}
-                    >
-                      Show less
-                    </button>
-                  </div>
+                        <div className={styles.reviewRowRight}>
+                          <span className={styles.scoreLabel}>Their score</span>
+                          <span className={styles.reviewScore}>{review.overallScore.toFixed(1)}</span>
+                        </div>
+                      </button>
+                      {expanded.has(review.id) && (
+                        <div className={styles.reviewExpanded}>
+                          <div className={styles.expandedMeta}>
+                            <span>Worked there {review.whenWorked.toLowerCase()}</span>
+                            <span>There for {review.experienceDuration}</span>
+                            <span>Reviewed {review.recency}</span>
+                          </div>
+                          <div className={styles.wordsBlock}>
+                            <p className={styles.wordsLabel}>What they wish they'd known</p>
+                            <p className={styles.wordsBody}>{review.wishKnown}</p>
+                          </div>
+                          {review.tellFriend && (
+                            <div className={styles.wordsBlock}>
+                              <p className={styles.wordsLabel}>What they'd tell a friend</p>
+                              <p className={styles.wordsBody}>{review.tellFriend}</p>
+                            </div>
+                          )}
+                          {(() => {
+                            const { required, optional } = sortSignals([...review.signals])
+                            return (
+                              <div className={styles.expandedSignals}>
+                                <p className={styles.signalGroupLabel}>Key signals</p>
+                                {required.map(signal => (
+                                  <div key={signal.name} className={styles.signalRow}>
+                                    <div className={styles.signalMeta}>
+                                      <div className={styles.signalName}>{signal.name}</div>
+                                      <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
+                                        {signal.answer}
+                                      </span>
+                                    </div>
+                                  </div>
+                                ))}
+                                {optional.length > 0 && (
+                                  <>
+                                    <p className={styles.signalGroupLabel}>Additional signals</p>
+                                    {optional.map(signal => (
+                                      <div key={signal.name} className={styles.signalRow}>
+                                        <div className={styles.signalMeta}>
+                                          <div className={styles.signalName}>{signal.name}</div>
+                                          <span className={`${styles.answerPill} ${pillClass(signal, styles)}`}>
+                                            {signal.answer}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </>
+                                )}
+                              </div>
+                            )
+                          })()}
+                          <button
+                            type="button"
+                            className={styles.collapseLink}
+                            onClick={() => {
+                              const row = document.getElementById(`review-${review.id}`)
+                              const targetY = row
+                                ? window.scrollY + row.getBoundingClientRect().top - 80
+                                : window.scrollY
+                              toggleExpanded(review.id)
+                              requestAnimationFrame(() => {
+                                window.scrollTo({ top: targetY, behavior: 'instant' })
+                              })
+                            }}
+                          >
+                            Show less
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {visibleCount < filteredReviews.length && (
+                  <button
+                    type="button"
+                    className={styles.loadMoreBtn}
+                    onClick={() => setVisibleCount(c => c + 5)}
+                  >
+                    Load 5 more reviews
+                  </button>
                 )}
-              </div>
-            ))}
-          </div>
-          {visibleCount < filteredReviews.length && (
-            <button
-              type="button"
-              className={styles.loadMoreBtn}
-              onClick={() => setVisibleCount(c => c + 5)}
-            >
-              Load {Math.min(5, filteredReviews.length - visibleCount)} more reviews
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className={styles.mapSection}>
-        <div className={styles.inner}>
-          <h2 className={styles.mapHeading}>Where you'll find them</h2>
-          <p className={styles.mapAddress}>{venue.address}</p>
-          <div ref={mapRef} className={styles.mapContainer} />
-        </div>
-      </div>
-
-      {showSignals && (
-        <div
-          className={styles.modalOverlay}
-          onClick={e => { if (e.target === e.currentTarget) setShowSignals(false) }}
-        >
-          <div className={styles.modalContent}>
-            <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>What are signals?</h2>
-              <button
-                type="button"
-                className={styles.modalClose}
-                onClick={() => setShowSignals(false)}
-              >✕</button>
-            </div>
-            {Object.entries(SIGNAL_QUESTIONS).map(([name, question]) => (
-              <div key={name} className={styles.signalExplainerRow}>
-                <p className={styles.signalExplainerName}>{name}</p>
-                <p className={styles.signalExplainerQuestion}>{question}</p>
-              </div>
-            ))}
+              </>
+            )}
           </div>
         </div>
       )}
 
-      {showScores && (
-        <div
-          className={styles.modalOverlay}
-          onClick={e => { if (e.target === e.currentTarget) setShowScores(false) }}
-        >
-          <div className={styles.modalContent}>
-            <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>Overall scores</h2>
-              <button
-                type="button"
-                className={styles.modalClose}
-                onClick={() => setShowScores(false)}
-              >✕</button>
-            </div>
+      {activeTab === 'signals' && (
+        <div className={styles.reviewSection}>
+          <div className={styles.inner}>
             <div className={styles.statRow}>
               <div className={styles.stat}>
-                <a href="#reviews" className={styles.statValue} onClick={scrollToReviews}>
-                  {venue.reviewCount}
-                </a>
+                <span className={styles.statValue}>{venue.reviewCount}</span>
                 <span className={styles.statLabel}>reviews</span>
               </div>
               <div className={styles.stat}>
@@ -586,6 +553,40 @@ export default function VenueDetail() {
                     style={{ width: `${(signal.score / 5) * 100}%` }}
                   />
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'track' && (
+        <div className={styles.mapSection}>
+          <div className={styles.inner}>
+            <h2 className={styles.mapHeading}>Where you'll find them</h2>
+            <p className={styles.mapAddress}>{venue.address}</p>
+            <div ref={mapRef} className={styles.mapContainer} />
+          </div>
+        </div>
+      )}
+
+      {showSignals && (
+        <div
+          className={styles.modalOverlay}
+          onClick={e => { if (e.target === e.currentTarget) setShowSignals(false) }}
+        >
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>What are signals?</h2>
+              <button
+                type="button"
+                className={styles.modalClose}
+                onClick={() => setShowSignals(false)}
+              >✕</button>
+            </div>
+            {Object.entries(SIGNAL_QUESTIONS).map(([name, question]) => (
+              <div key={name} className={styles.signalExplainerRow}>
+                <p className={styles.signalExplainerName}>{name}</p>
+                <p className={styles.signalExplainerQuestion}>{question}</p>
               </div>
             ))}
           </div>

@@ -25,7 +25,7 @@ export default function HowItWorks() {
         <div className={styles.sectionHeader}>
           <h2 className={styles.title}>What makes House Rules different</h2>
           <p className={styles.subtitle}>
-            We turn real experiences into structured signals you can actually use.
+            We turn real experiences into structured signals you can use.
           </p>
         </div>
         <div className={styles.grid}>

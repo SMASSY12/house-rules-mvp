@@ -1,4 +1,5 @@
 import { useState, Fragment } from 'react'
+import { Link } from 'react-router-dom'
 import styles from './WriteReview.module.css'
 
 const TOTAL_STEPS = 4
@@ -250,6 +251,7 @@ export default function WriteReview() {
   const [answers, setAnswers] = useState({})
   const [verification, setVerification] = useState('')
   const [showAll, setShowAll] = useState(false)
+  const [attempted, setAttempted] = useState(false)
 
   function setAnswer(id, value) {
     setAnswers(prev => ({ ...prev, [id]: value }))
@@ -288,7 +290,8 @@ export default function WriteReview() {
           {step > TOTAL_STEPS ? (
           <div className={styles.successState}>
             <p className={styles.successHeading}>Appreciate you. Seriously.</p>
-            <p className={styles.successBody}>You just made this easier for someone else to make the right call.</p>
+            <p className={styles.successBody}>Your review is anonymous and helps other professionals find workplaces that treat them right.</p>
+            <Link to="/reviews" className={styles.successCta}>Read reviews</Link>
           </div>
         ) : (
           <>
@@ -414,6 +417,9 @@ export default function WriteReview() {
                                       </button>
                                     ))}
                                   </div>
+                                  {attempted && TOP_10_IDS.has(q.id) && (q.multiSelect ? !answers[q.id]?.length : !answers[q.id]) && (
+                                    <p className={styles.signalValidation}>This one's important — takes 10 seconds.</p>
+                                  )}
                                 </div>
                                 {q.id === TOGGLE_AFTER_ID && (
                                   <>
@@ -444,7 +450,11 @@ export default function WriteReview() {
                                       </div>
                                     ))}
                                     <div className={styles.disclosureToggle}>
-                                      <p className={styles.toggleMicrocopy}>The more context you share, the more useful your review becomes for other professionals.</p>
+                                      <p className={styles.toggleMicrocopy}>
+                                        {showAll
+                                          ? "These help paint the full picture — answer what you can, skip what doesn't apply."
+                                          : 'The more context you share, the more useful your review becomes for other professionals.'}
+                                      </p>
                                       <button
                                         type="button"
                                         className={styles.toggleBtn}
@@ -470,7 +480,7 @@ export default function WriteReview() {
                 <legend className={styles.legend}>In Your Words</legend>
                 <div className={styles.fields}>
                   <div className={styles.field}>
-                    <label className={styles.labelProminent}>What do you wish you knew before taking this job?</label>
+                    <label className={styles.labelProminent}>What do you wish you'd known before taking this job?</label>
                     <textarea
                       className={styles.textarea}
                       rows={2}
@@ -559,7 +569,17 @@ export default function WriteReview() {
               )}
               <div className={styles.navSpacer} />
               {step < TOTAL_STEPS ? (
-                <button type="button" className={styles.submitBtn} onClick={nextStep}>
+                <button type="button" className={styles.submitBtn} onClick={() => {
+                  if (step === 2) {
+                    const allRequired = signalGroups.flatMap(g => g.questions).filter(q => TOP_10_IDS.has(q.id))
+                    const hasUnanswered = allRequired.some(q =>
+                      q.multiSelect ? !answers[q.id]?.length : !answers[q.id]
+                    )
+                    setAttempted(true)
+                    if (hasUnanswered) return
+                  }
+                  nextStep()
+                }}>
                   Continue
                 </button>
               ) : (

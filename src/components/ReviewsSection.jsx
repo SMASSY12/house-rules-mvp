@@ -9,7 +9,7 @@ export default function ReviewsSection() {
         <div className={styles.sectionHeader}>
           <h2 className={styles.title}>Real Voices from the Floor</h2>
           <p className={styles.subtitle}>
-            Written by the people who actually worked the shifts.
+            Written by the people who worked the shifts.
           </p>
         </div>
         <div className={styles.grid}>
