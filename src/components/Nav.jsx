@@ -1,13 +1,19 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import styles from './Nav.module.css'
 
 export default function Nav() {
   const location = useLocation()
+  const navigate = useNavigate()
 
   function handleHowItWorks(e) {
+    e.preventDefault()
     if (location.pathname === '/') {
-      e.preventDefault()
       document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      navigate('/')
+      setTimeout(() => {
+        document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
     }
   }
 

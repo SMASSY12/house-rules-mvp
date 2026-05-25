@@ -273,6 +273,7 @@ export default function VenueDetail() {
   const mapRef = useRef(null)
   const pendingScrollRef = useRef(null)
   const cardRefs = useRef({})
+  const collapseScrollRef = useRef(null)
 
   const allRoles = [...new Set(reviews.map(r => r.role))]
   const filteredReviews = sortReviews(
@@ -298,6 +299,10 @@ export default function VenueDetail() {
 
   function handleCollapse(reviewId) {
     pendingScrollRef.current = null
+    const card = cardRefs.current[reviewId]
+    if (card) {
+      collapseScrollRef.current = window.scrollY + card.getBoundingClientRect().top
+    }
     setExpanded(prev => {
       const next = new Set(prev)
       next.delete(reviewId)
@@ -327,10 +332,15 @@ export default function VenueDetail() {
   }, [])
 
   useEffect(() => {
-    if (pendingScrollRef.current === null) return
-    const top = pendingScrollRef.current
-    pendingScrollRef.current = null
-    window.scrollTo({ top: top - 80, behavior: 'smooth' })
+    if (pendingScrollRef.current !== null) {
+      const y = pendingScrollRef.current
+      pendingScrollRef.current = null
+      window.scrollTo({ top: y - 80, behavior: 'smooth' })
+    } else if (collapseScrollRef.current !== null) {
+      const y = collapseScrollRef.current
+      collapseScrollRef.current = null
+      window.scrollTo({ top: y - 80, behavior: 'smooth' })
+    }
   }, [expanded])
 
   return (
