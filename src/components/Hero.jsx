@@ -4,7 +4,7 @@ export default function Hero() {
   return (
     <section className={styles.hero}>
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>The inside word on hospitality workplaces.</p>
+        <p className={styles.eyebrow}>The inside word on hospitality workplaces</p>
         <h1 className={styles.headline}>
           Where professionals go before they say yes.
         </h1>
