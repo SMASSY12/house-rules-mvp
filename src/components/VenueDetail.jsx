@@ -368,7 +368,7 @@ export default function VenueDetail() {
                 className={styles.howItWorksBtn}
                 onClick={() => setShowHowItWorks(s => !s)}
               >
-                How House Rules reviews work{showHowItWorks ? ' ▲' : ' ↗'}
+                How House Rules reviews work{showHowItWorks ? ' ▲' : ' ▼'}
               </button>
               {showHowItWorks && (
                 <div className={styles.howItWorksContent}>
