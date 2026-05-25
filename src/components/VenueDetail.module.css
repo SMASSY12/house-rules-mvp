@@ -438,8 +438,34 @@ a.statValue:hover { text-decoration: underline; }
   letter-spacing: -0.008em;
 }
 
+/* Map */
+.mapSection {
+  padding: 48px 24px 64px;
+  border-top: 1px solid var(--color-border);
+}
+.mapHeading {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-bottom: 4px;
+}
+.mapAddress {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  letter-spacing: -0.005em;
+  margin-bottom: 16px;
+}
+.mapContainer {
+  height: 320px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
 @media (max-width: 600px) {
   .statRow { gap: 20px; }
   .statValue { font-size: 1.25rem; }
   .tabContent { padding: 16px; }
+  .mapContainer { height: 240px; }
 }

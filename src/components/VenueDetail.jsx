@@ -1,7 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
 import StarRating from './StarRating'
 import styles from './VenueDetail.module.css'
+
+delete L.Icon.Default.prototype._getIconUrl
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: new URL('leaflet/dist/images/marker-icon-2x.png', import.meta.url).href,
+  iconUrl: new URL('leaflet/dist/images/marker-icon.png', import.meta.url).href,
+  shadowUrl: new URL('leaflet/dist/images/marker-shadow.png', import.meta.url).href,
+})
 
 const MOCK_VENUE = {
   id: 'the-anchor-and-rail',
@@ -12,6 +21,9 @@ const MOCK_VENUE = {
   reviewCount: 8,
   verified: true,
   roles: ['Server', 'Bartender', 'Host', 'Support staff', 'Barista'],
+  latitude: 47.6253,
+  longitude: -122.3222,
+  address: '121 Pine St, Capitol Hill, Seattle, WA',
 }
 
 const MOCK_REVIEWS = [
@@ -276,6 +288,7 @@ export default function VenueDetail() {
   const [showTrackRecord, setShowTrackRecord] = useState(false)
   const [sortOrder, setSortOrder] = useState('recent')
   const [showHowItWorks, setShowHowItWorks] = useState(false)
+  const mapRef = useRef(null)
 
   const filteredReviews = sortReviews(
     reviews.filter(r => !roleFilter || r.role === roleFilter),
@@ -294,6 +307,23 @@ export default function VenueDetail() {
       return next
     })
   }
+
+  useEffect(() => {
+    if (!mapRef.current) return
+    const map = L.map(mapRef.current, {
+      center: [venue.latitude, venue.longitude],
+      zoom: 15,
+      scrollWheelZoom: false,
+    })
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 19,
+    }).addTo(map)
+    L.marker([venue.latitude, venue.longitude])
+      .addTo(map)
+      .bindPopup(venue.name)
+    return () => map.remove()
+  }, [])
 
   return (
     <div className={styles.page}>
@@ -646,6 +676,14 @@ export default function VenueDetail() {
               Load {Math.min(5, filteredReviews.length - visibleCount)} more reviews
             </button>
           )}
+        </div>
+      </div>
+
+      <div className={styles.mapSection}>
+        <div className={styles.inner}>
+          <h2 className={styles.mapHeading}>Where you'll find them</h2>
+          <p className={styles.mapAddress}>{venue.address}</p>
+          <div ref={mapRef} className={styles.mapContainer} />
         </div>
       </div>
 
