@@ -412,7 +412,7 @@ export default function VenueDetail() {
           )}
           <div className={styles.reviewList}>
             {filteredReviews.slice(0, visibleCount).map(review => (
-              <div key={review.id} className={`${styles.reviewRow} ${expanded.has(review.id) ? styles.reviewRowExpanded : ''}`}>
+              <div key={review.id} id={`review-${review.id}`} className={`${styles.reviewRow} ${expanded.has(review.id) ? styles.reviewRowExpanded : ''}`}>
                 <button
                   type="button"
                   className={styles.reviewRowHeader}
@@ -489,7 +489,11 @@ export default function VenueDetail() {
                     <button
                       type="button"
                       className={styles.collapseLink}
-                      onClick={() => toggleExpanded(review.id)}
+                      onClick={() => {
+                        const row = document.getElementById(`review-${review.id}`)
+                        if (row) row.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                        toggleExpanded(review.id)
+                      }}
                     >
                       Show less
                     </button>
