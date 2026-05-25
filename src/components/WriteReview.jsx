@@ -547,9 +547,6 @@ export default function WriteReview() {
                 </div>
                 <div className={styles.verifySection}>
                   <label className={styles.label}>How would you like to verify your connection to this workplace?</label>
-                  <p className={styles.verifyHelper}>
-                    Helps keep reviews credible. We'll automatically remove your private information — we only need to see your name and employer name.
-                  </p>
                   <div className={styles.selectWrap}>
                     <select
                       className={styles.select}
@@ -564,6 +561,9 @@ export default function WriteReview() {
                       <option value="profile">Link a public profile</option>
                     </select>
                   </div>
+                  <div className={styles.anonBlock}>
+                    <p className={styles.anonNote}>Your identity stays private. We only need your name and employer to verify your connection — everything else is automatically removed. Your review is published anonymously and never shared with your employer.</p>
+                  </div>
                   {verification && (
                     <p className={styles.verifyConfirm}>
                       Thanks — this helps increase trust in your review.
@@ -573,13 +573,6 @@ export default function WriteReview() {
               </fieldset>
             )}
 
-            {step === TOTAL_STEPS && (
-              <div className={styles.anonBlock}>
-                <p className={styles.anonNote}>Your identity stays private. Your review will be published anonymously.</p>
-                <p className={styles.anonSubnote}>Name, email, password, and verification details are never shown publicly or shared with your employer.</p>
-                <p className={styles.anonSubnote}>You're helping someone avoid a bad situation — or find a good one.</p>
-              </div>
-            )}
 
             <div className={styles.navRow}>
               {step > 1 && (
