@@ -271,8 +271,8 @@ export default function WriteReview() {
     })
   }
 
-  function nextStep() { setStep(s => s + 1) }
-  function prevStep() { setStep(s => Math.max(s - 1, 1)) }
+  function nextStep() { setStep(s => s + 1); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  function prevStep() { setStep(s => Math.max(s - 1, 1)); window.scrollTo({ top: 0, behavior: 'smooth' }) }
 
   return (
     <div className={styles.page}>
@@ -387,7 +387,7 @@ export default function WriteReview() {
                     return (
                       <div key={q.id} className={styles.signalQuestion}>
                         <div className={styles.questionHeader}>
-                          <span className={styles.questionText}>{idx + 1}. {q.text}</span>
+                          <span className={styles.questionText}>{q.text}</span>
                         </div>
                         {q.microcopy && <p className={styles.questionMicrocopy}>{q.microcopy}</p>}
                         <div className={styles.pillGroupWrap}>
