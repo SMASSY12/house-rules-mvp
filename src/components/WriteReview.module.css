@@ -256,6 +256,7 @@
 
 .questionText {
   font-size: 0.9375rem;
+  font-weight: 600;
   color: var(--color-text);
   letter-spacing: -0.008em;
   flex: 1;

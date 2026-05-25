@@ -256,7 +256,6 @@ export default function WriteReview() {
   const [answers, setAnswers] = useState({})
   const [verification, setVerification] = useState('')
   const [showAll, setShowAll] = useState(false)
-  const [attempted, setAttempted] = useState(false)
 
   function setAnswer(id, value) {
     setAnswers(prev => ({ ...prev, [id]: value }))
@@ -383,12 +382,12 @@ export default function WriteReview() {
                 <p className={styles.stepHelper}>Rate what you experienced — there's no wrong answer here. In the next step, you'll tell the story behind each one in your own words.</p>
 
                 <div className={styles.questionList}>
-                  {REQUIRED_ORDER.map(id => {
+                  {REQUIRED_ORDER.map((id, idx) => {
                     const q = allSignalById[id]
                     return (
                       <div key={q.id} className={styles.signalQuestion}>
                         <div className={styles.questionHeader}>
-                          <span className={styles.questionText}>{q.text}</span>
+                          <span className={styles.questionText}>{idx + 1}. {q.text}</span>
                         </div>
                         {q.microcopy && <p className={styles.questionMicrocopy}>{q.microcopy}</p>}
                         <div className={styles.pillGroupWrap}>
@@ -408,9 +407,6 @@ export default function WriteReview() {
                             </button>
                           ))}
                         </div>
-                        {attempted && (q.multiSelect ? !answers[q.id]?.length : !answers[q.id]) && (
-                          <p className={styles.signalValidation}>This one's important — takes 10 seconds.</p>
-                        )}
                       </div>
                     )
                   })}
@@ -447,7 +443,7 @@ export default function WriteReview() {
                   <p className={styles.toggleMicrocopy}>
                     {showAll
                       ? "These help paint the full picture — answer what you can, skip what doesn't apply."
-                      : 'The more context you share, the more useful your review may be for other professionals.'}
+                      : "These are optional — answer what applies to your experience. The more context you share, the more useful your review may be."}
                   </p>
                   <button
                     type="button"
@@ -594,14 +590,7 @@ export default function WriteReview() {
               <div className={styles.navSpacer} />
               {step < TOTAL_STEPS ? (
                 <button type="button" className={styles.submitBtn} onClick={() => {
-                  if (step === 2) {
-                    const allRequired = signalGroups.flatMap(g => g.questions).filter(q => TOP_10_IDS.has(q.id))
-                    const hasUnanswered = allRequired.some(q =>
-                      q.multiSelect ? !answers[q.id]?.length : !answers[q.id]
-                    )
-                    setAttempted(true)
-                    if (hasUnanswered) return
-                  }
+                  // TODO: restore required validation before production
                   nextStep()
                 }}>
                   Continue

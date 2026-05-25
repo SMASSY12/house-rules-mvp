@@ -292,6 +292,10 @@ export default function VenueDetail() {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+  useEffect(() => {
     if (!mapRef.current) return
     const map = L.map(mapRef.current, {
       center: [venue.latitude, venue.longitude],
@@ -310,7 +314,7 @@ export default function VenueDetail() {
 
   useEffect(() => {
     if (pendingScrollRef.current === null) return
-    window.scrollTo({ top: pendingScrollRef.current, behavior: 'smooth' })
+    window.scrollTo({ top: pendingScrollRef.current - 80, behavior: 'smooth' })
     pendingScrollRef.current = null
   }, [expanded])
 
@@ -419,7 +423,7 @@ export default function VenueDetail() {
                         onClick={() => {
                           if (!expanded.has(review.id)) {
                             const row = document.getElementById(`review-${review.id}`)
-                            if (row) pendingScrollRef.current = window.scrollY + row.getBoundingClientRect().top - 80
+                            if (row) pendingScrollRef.current = window.scrollY + row.getBoundingClientRect().top
                           }
                           toggleExpanded(review.id)
                         }}
@@ -486,7 +490,7 @@ export default function VenueDetail() {
                           <button
                             type="button"
                             className={styles.collapseLink}
-                            onClick={() => toggleExpanded(review.id)}
+                            onClick={() => { pendingScrollRef.current = null; toggleExpanded(review.id) }}
                           >
                             Show less
                           </button>
