@@ -271,6 +271,7 @@ export default function VenueDetail() {
   const [showSignals, setShowSignals]       = useState(false)
   const [showScores, setShowScores]         = useState(false)
   const mapRef = useRef(null)
+  const pendingScrollRef = useRef(null)
 
   const allRoles = [...new Set(reviews.map(r => r.role))]
   const filteredReviews = sortReviews(
@@ -306,6 +307,16 @@ export default function VenueDetail() {
       .bindPopup(venue.name)
     return () => map.remove()
   }, [])
+
+  useEffect(() => {
+    if (!pendingScrollRef.current) return
+    const row = document.getElementById(`review-${pendingScrollRef.current}`)
+    if (row) {
+      const targetY = window.scrollY + row.getBoundingClientRect().top - 80
+      window.scrollTo({ top: targetY, behavior: 'smooth' })
+    }
+    pendingScrollRef.current = null
+  }, [expanded])
 
   return (
     <div className={styles.page}>
@@ -409,7 +420,10 @@ export default function VenueDetail() {
                       <button
                         type="button"
                         className={styles.reviewRowHeader}
-                        onClick={() => toggleExpanded(review.id)}
+                        onClick={() => {
+                          if (!expanded.has(review.id)) pendingScrollRef.current = review.id
+                          toggleExpanded(review.id)
+                        }}
                         aria-expanded={expanded.has(review.id)}
                       >
                         <div className={styles.reviewRowLeft}>
@@ -474,17 +488,11 @@ export default function VenueDetail() {
                             type="button"
                             className={styles.collapseLink}
                             onClick={() => {
-                              const row = document.getElementById(`review-${review.id}`)
-                              const targetY = row
-                                ? window.scrollY + row.getBoundingClientRect().top - 80
-                                : window.scrollY
                               toggleExpanded(review.id)
-                              requestAnimationFrame(() => {
-                                window.scrollTo({ top: targetY, behavior: 'instant' })
-                              })
+                              document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })
                             }}
                           >
-                            Show less
+                            ← Back to all reviews
                           </button>
                         </div>
                       )}
