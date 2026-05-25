@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
+import { MOCK_VENUES } from '../data/venues'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import StarRating from './StarRating'
@@ -12,19 +13,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl: new URL('leaflet/dist/images/marker-shadow.png', import.meta.url).href,
 })
 
-const MOCK_VENUE = {
-  id: 'the-anchor-and-rail',
-  name: 'The Anchor & Rail',
-  neighbourhood: 'Capitol Hill',
-  city: 'Seattle',
-  overallScore: 2.7,
-  reviewCount: 8,
-  verified: true,
-  roles: ['Server', 'Bartender', 'Host', 'Support staff', 'Barista'],
-  latitude: 47.6253,
-  longitude: -122.3222,
-  address: '121 Pine St, Capitol Hill, Seattle, WA',
-}
 
 const MOCK_REVIEWS = [
   {
@@ -277,7 +265,7 @@ const SIGNAL_QUESTIONS = {
 
 export default function VenueDetail() {
   const { id } = useParams()
-  const venue = MOCK_VENUE
+  const venue = MOCK_VENUES.find(v => v.id === id) ?? MOCK_VENUES[0]
   const reviews = MOCK_REVIEWS
 
   const [expanded, setExpanded]         = useState(new Set())

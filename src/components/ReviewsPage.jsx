@@ -52,11 +52,16 @@ export default function ReviewsPage() {
     filteredVenues.forEach(venue => {
       L.marker([venue.latitude, venue.longitude])
         .addTo(map)
+        .bindTooltip(`
+          <strong>${venue.name}</strong><br/>
+          ${venue.neighbourhood} · ${venue.type}<br/>
+          ★ ${venue.overallScore.toFixed(1)} · ${venue.reviewCount} reviews
+        `, { sticky: true })
         .bindPopup(`
           <strong>${venue.name}</strong><br/>
           ${venue.neighbourhood} · ${venue.type}<br/>
           ★ ${venue.overallScore.toFixed(1)} · ${venue.reviewCount} reviews<br/>
-          <a href="/venue/${venue.id}">View reviews →</a>
+          <a href="/venue/${venue.id}" style="color:#8c2f2f">View reviews →</a>
         `)
     })
 

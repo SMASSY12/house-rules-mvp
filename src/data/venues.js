@@ -12,6 +12,7 @@ export const MOCK_VENUES = [
     address: '121 Pine St, Capitol Hill, Seattle, WA',
     roles: ['Server', 'Bartender', 'Host', 'Support staff', 'Barista'],
     wouldRecommend: 25,
+    verified: true,
   },
   {
     id: 'vashon-kitchen',
@@ -26,6 +27,7 @@ export const MOCK_VENUES = [
     address: '17614 Vashon Hwy SW, Vashon, WA',
     roles: ['Server', 'Cook', 'Barista'],
     wouldRecommend: 75,
+    verified: true,
   },
   {
     id: 'pike-and-pour',
@@ -40,6 +42,7 @@ export const MOCK_VENUES = [
     address: '1501 Pike Pl, Seattle, WA',
     roles: ['Bartender', 'Server', 'Host'],
     wouldRecommend: 40,
+    verified: true,
   },
   {
     id: 'the-emerald-room',
@@ -52,8 +55,9 @@ export const MOCK_VENUES = [
     latitude: 47.6062,
     longitude: -122.3321,
     address: '1301 5th Ave, Seattle, WA',
-    roles: ['Server', 'Sommelier', 'Host', 'Support staff'],
+    roles: ['Server', 'Sommelier', 'Host', 'Support staff', 'Manager'],
     wouldRecommend: 84,
+    verified: true,
   },
   {
     id: 'fremont-social-club',
@@ -66,7 +70,8 @@ export const MOCK_VENUES = [
     latitude: 47.6516,
     longitude: -122.3496,
     address: '3416 Fremont Ave N, Seattle, WA',
-    roles: ['Bartender', 'Server', 'Cook'],
+    roles: ['Bartender', 'Server', 'Cook', 'Manager'],
     wouldRecommend: 57,
+    verified: true,
   },
 ]
