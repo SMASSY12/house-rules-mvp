@@ -1,0 +1,6 @@
+# Handle line endings automatically for files detected as text
+* text=auto
+
+# Force bash scripts and binary/executable-like files to use LF (Linux) line endings
+*.sh text eol=lf
+node_modules/.bin/* binary
