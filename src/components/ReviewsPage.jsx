@@ -148,45 +148,63 @@ export default function ReviewsPage() {
         </p>
       </div>
 
-      {viewMode === 'list' && (
+      {filteredVenues.length === 0 ? (
         <div className={styles.inner}>
           <div className={styles.venueList}>
-            {filteredVenues.length === 0 ? (
-              <p className={styles.emptyState}>
-                No businesses match "{searchTerm}" — try a different search.
+            <div className={styles.emptyState}>
+              <p className={styles.emptyStateText}>
+                {searchTerm
+                  ? `No reviews for "${searchTerm}" yet.`
+                  : 'No results match your current filters.'}
               </p>
-            ) : (
-              filteredVenues.map(venue => (
+              {searchTerm && (
                 <Link
-                  key={venue.id}
-                  to={`/venue/${venue.id}`}
-                  className={styles.venueCard}
+                  to={`/write?venue=${encodeURIComponent(searchTerm)}`}
+                  className={styles.emptyStateCta}
                 >
-                  <div className={styles.cardMain}>
-                    <div className={styles.cardLeft}>
-                      <h2 className={styles.venueName}>{venue.name}</h2>
-                      <p className={styles.venueMeta}>{venue.neighbourhood} · {venue.type}</p>
-                      <div className={styles.roleTags}>
-                        {venue.roles.map(r => (
-                          <span key={r} className={styles.roleTag}>{r}</span>
-                        ))}
-                      </div>
-                    </div>
-                    <div className={styles.cardRight}>
-                      <span className={styles.score}>{venue.overallScore.toFixed(1)}</span>
-                      <span className={styles.reviewCount}>{venue.reviewCount} reviews</span>
-                      <span className={styles.recommend}>{venue.wouldRecommend}% recommend</span>
-                    </div>
-                  </div>
+                  Be the first to review it →
                 </Link>
-              ))
-            )}
+              )}
+            </div>
           </div>
         </div>
-      )}
+      ) : (
+        <>
+          {viewMode === 'list' && (
+            <div className={styles.inner}>
+              <div className={styles.venueList}>
+                {filteredVenues.map(venue => (
+                  <Link
+                    key={venue.id}
+                    to={`/venue/${venue.id}`}
+                    className={styles.venueCard}
+                  >
+                    <div className={styles.cardMain}>
+                      <div className={styles.cardLeft}>
+                        <h2 className={styles.venueName}>{venue.name}</h2>
+                        <p className={styles.venueMeta}>{venue.neighbourhood} · {venue.type}</p>
+                        <div className={styles.roleTags}>
+                          {venue.roles.map(r => (
+                            <span key={r} className={styles.roleTag}>{r}</span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className={styles.cardRight}>
+                        <span className={styles.score}>{venue.overallScore.toFixed(1)}</span>
+                        <span className={styles.reviewCount}>{venue.reviewCount} reviews</span>
+                        <span className={styles.recommend}>{venue.wouldRecommend}% recommend</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
-      {viewMode === 'map' && (
-        <div className={styles.mapContainer} ref={mapRef} />
+          {viewMode === 'map' && (
+            <div className={styles.mapContainer} ref={mapRef} />
+          )}
+        </>
       )}
 
     </div>

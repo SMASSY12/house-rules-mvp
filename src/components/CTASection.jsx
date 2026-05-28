@@ -9,10 +9,9 @@ export default function CTASection() {
           Tell the next person what you wish you'd known.
         </h2>
         <p className={styles.body}>
-          Your honest review may help other professionals find workplaces that treat them right. Takes a few minutes. Stays anonymous.
+          Your honest review may help other professionals find workplaces that treat them right. It only takes a few minutes and stays anonymous.
         </p>
         <a href="/write" className={styles.btn}>Write a review</a>
-        <p className={styles.note}>Your name never appears on your review.</p>
       </div>
     </section>
   )

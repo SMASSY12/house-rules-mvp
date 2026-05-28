@@ -33,9 +33,10 @@
   font-weight: 700;
   letter-spacing: -0.02em;
 }
+/* Text link — Forest, not Ember */
 .reviewCountLink {
   font-size: 0.875rem;
-  color: var(--color-cta);
+  color: #2D5A3D;
   text-decoration: none;
   letter-spacing: -0.005em;
 }
@@ -97,8 +98,6 @@
 .barTrack { height: 4px; background: var(--color-border); border-radius: 2px; overflow: hidden; }
 .barFill { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
 
-/* Tier colours — hardcoded hex, flag for CSS variable conversion at design system finalisation */
-/* .green/.neutral/.red = text color only (score spans). Bar fills use .barGreen/.barNeutral/.barRed */
 .green   { color: #2a6e4a; }
 .neutral { color: #7a6028; }
 .red     { color: #8c2f2f; }
@@ -168,12 +167,14 @@ a.statValue:hover { text-decoration: underline; }
 .reviewScore { font-size: 1.125rem; font-weight: 700; letter-spacing: -0.02em; color: var(--color-text); }
 .reviewExpanded { padding: 0 0 20px; }
 .expandedSignals { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--color-border-subtle); }
+
+/* Text link — Forest */
 .collapseLink {
   display: block;
   margin-top: 12px;
   margin-bottom: 8px;
   font-size: 0.8125rem;
-  color: var(--color-cta);
+  color: #2D5A3D;
   background: none;
   border: none;
   cursor: pointer;
@@ -182,13 +183,14 @@ a.statValue:hover { text-decoration: underline; }
 }
 .collapseLink:hover { text-decoration: underline; }
 
+/* Outline button — Forest */
 .loadMoreBtn {
   font-family: var(--font-sans);
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-cta);
+  color: #2D5A3D;
   background: none;
-  border: 1px solid var(--color-cta);
+  border: 1px solid #2D5A3D;
   border-radius: var(--radius-sm);
   padding: 10px 20px;
   cursor: pointer;
@@ -196,7 +198,7 @@ a.statValue:hover { text-decoration: underline; }
   letter-spacing: -0.01em;
   transition: background 0.15s, color 0.15s;
 }
-.loadMoreBtn:hover { background: var(--color-cta); color: #fff; }
+.loadMoreBtn:hover { background: #2D5A3D; color: #fff; }
 
 /* Answer pills */
 .answerPill {
@@ -224,17 +226,20 @@ a.statValue:hover { text-decoration: underline; }
   color: var(--color-text-faint);
   letter-spacing: -0.005em;
 }
+
+/* Text link — Forest */
 .expandLink {
   display: inline-block;
   margin-top: 6px;
   font-size: 0.8125rem;
-  color: var(--color-cta);
+  color: #2D5A3D;
   text-decoration: none;
   letter-spacing: -0.005em;
 }
 .expandLink:hover { text-decoration: underline; }
 
-.roleTagActive { background: var(--color-cta); color: #fff; border-color: var(--color-cta); }
+/* Active role pill — Forest */
+.roleTagActive { background: #2D5A3D; color: #fff; border-color: #2D5A3D; }
 .roleTag:hover:not(.roleTagActive) {
   background: var(--color-border);
   border-color: var(--color-text-faint);
@@ -247,9 +252,10 @@ a.statValue:hover { text-decoration: underline; }
   color: var(--color-text-muted);
   margin-bottom: 16px;
 }
+/* Clear link — Forest */
 .filterClear {
   font-size: 0.8125rem;
-  color: var(--color-cta);
+  color: #2D5A3D;
   background: none;
   border: none;
   cursor: pointer;
@@ -299,18 +305,20 @@ a.statValue:hover { text-decoration: underline; }
   align-items: center;
   gap: 10px;
 }
+/* Outline button — Forest */
 .overallScoresBtn {
   font-size: 0.8125rem;
-  color: var(--color-cta);
+  color: #2D5A3D;
   background: none;
-  border: 1px solid var(--color-cta);
+  border: 1px solid #2D5A3D;
   border-radius: var(--radius-sm);
   padding: 5px 12px;
   cursor: pointer;
   letter-spacing: -0.005em;
   white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
 }
-.overallScoresBtn:hover { background: var(--color-cta); color: #fff; }
+.overallScoresBtn:hover { background: #2D5A3D; color: #fff; }
 .sortSelect {
   font-family: var(--font-sans);
   font-size: 0.8125rem;
@@ -323,9 +331,10 @@ a.statValue:hover { text-decoration: underline; }
   letter-spacing: -0.005em;
 }
 .howItWorksRow { margin-bottom: 20px; }
+/* Text link — Forest */
 .howItWorksBtn {
   font-size: 0.8125rem;
-  color: var(--color-cta);
+  color: #2D5A3D;
   background: none;
   border: none;
   cursor: pointer;
@@ -333,11 +342,12 @@ a.statValue:hover { text-decoration: underline; }
   letter-spacing: -0.005em;
 }
 .howItWorksBtn:hover { text-decoration: underline; }
+/* Inline text link — Forest */
 .inlineLink {
   background: none;
   border: none;
   padding: 0;
-  color: var(--color-cta);
+  color: #2D5A3D;
   text-decoration: underline;
   cursor: pointer;
   font-size: inherit;
@@ -357,7 +367,6 @@ a.statValue:hover { text-decoration: underline; }
   letter-spacing: -0.008em;
 }
 
-/* Signals explainer modal rows */
 .signalExplainerRow {
   padding: 10px 0;
   border-bottom: 1px solid var(--color-border-subtle);
@@ -448,7 +457,7 @@ a.statValue:hover { text-decoration: underline; }
   overflow: hidden;
 }
 
-/* Tabs */
+/* Tabs — active underline Forest */
 .tabBar {
   display: flex;
   border-bottom: 1px solid var(--color-border);
@@ -472,11 +481,11 @@ a.statValue:hover { text-decoration: underline; }
 .tabBtn:hover { color: var(--color-text); }
 .tabBtnActive {
   color: var(--color-text);
-  border-bottom-color: var(--color-cta);
+  border-bottom-color: #2D5A3D;
   font-weight: 600;
 }
 
-/* Empty state */
+/* Empty state — Write a review CTA stays Ember (primary conversion action) */
 .emptyState {
   padding: 48px 0;
   text-align: center;
@@ -502,11 +511,11 @@ a.statValue:hover { text-decoration: underline; }
 }
 .emptyStateCta:hover { background: var(--color-cta-hover); }
 
-/* Back to all reviews page-level CTA */
+/* Back link — Forest */
 .backToReviewsRow { padding: 0 24px 32px; }
 .backToReviewsLink {
   font-size: 0.8125rem;
-  color: var(--color-cta);
+  color: #2D5A3D;
   text-decoration: none;
   letter-spacing: -0.005em;
 }

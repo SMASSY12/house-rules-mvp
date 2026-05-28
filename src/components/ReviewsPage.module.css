@@ -43,7 +43,7 @@
   outline: none;
 }
 .searchInput:focus {
-  border-color: var(--color-cta);
+  border-color: #2D5A3D;
 }
 .viewToggle {
   display: flex;
@@ -65,7 +65,7 @@
   transition: background 0.15s, color 0.15s;
 }
 .toggleActive {
-  background: var(--color-cta);
+  background: #2D5A3D;
   color: #fff;
 }
 
@@ -97,13 +97,13 @@
   border-color: var(--color-text-faint);
 }
 .filterChipActive {
-  background: var(--color-cta);
+  background: #2D5A3D;
   color: #fff;
-  border-color: var(--color-cta);
+  border-color: #2D5A3D;
 }
 .clearFilter {
   font-size: 0.75rem;
-  color: var(--color-cta);
+  color: #2D5A3D;
   background: none;
   border: none;
   cursor: pointer;
@@ -196,11 +196,30 @@
   letter-spacing: -0.005em;
 }
 
+/* ── Empty state ── */
 .emptyState {
-  font-size: 0.9375rem;
-  color: var(--color-text-muted);
   padding: 48px 0;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.emptyStateText {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  letter-spacing: -0.008em;
+}
+.emptyStateCta {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #2D5A3D;
+  text-decoration: none;
+  letter-spacing: -0.008em;
+  transition: opacity 0.15s;
+}
+.emptyStateCta:hover {
+  opacity: 0.75;
 }
 
 .mapContainer {

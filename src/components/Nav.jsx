@@ -24,7 +24,7 @@ export default function Nav() {
         <nav className={styles.links}>
           <Link to="/reviews">Reviews</Link>
           <a href="/#how-it-works" onClick={handleHowItWorks}>How it works</a>
-          <Link to="/write" className={styles.cta}>Write a Review</Link>
+          <Link to="/write" className={styles.cta}>Write a review</Link>
         </nav>
       </div>
     </header>

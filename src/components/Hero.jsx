@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import styles from './Hero.module.css'
 
 export default function Hero() {
@@ -12,8 +13,8 @@ export default function Hero() {
           Verified reviews from people who worked the shifts. Pay, management, culture, scheduling — the stuff job posts never tell you.
         </p>
         <div className={styles.actions}>
-          <a href="/reviews" className={styles.btnPrimary}>Read reviews</a>
-          <a href="/write" className={styles.btnSecondary}>Write a review</a>
+          <Link to="/write" className={styles.btnPrimary}>Write a review</Link>
+          <Link to="/reviews" className={styles.btnSecondary}>Read reviews</Link>
         </div>
       </div>
     </section>

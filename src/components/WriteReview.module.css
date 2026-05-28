@@ -184,8 +184,8 @@
 .input:focus,
 .textarea:focus {
   outline: none;
-  border-color: var(--color-cta);
-  box-shadow: 0 0 0 3px rgba(140, 47, 47, 0.09);
+  border-color: #2D5A3D;
+  box-shadow: 0 0 0 3px rgba(45, 90, 61, 0.09);
 }
 
 .textarea {
@@ -230,11 +230,11 @@
 
 .select:focus {
   outline: none;
-  border-color: var(--color-cta);
-  box-shadow: 0 0 0 3px rgba(140, 47, 47, 0.09);
+  border-color: #2D5A3D;
+  box-shadow: 0 0 0 3px rgba(45, 90, 61, 0.09);
 }
 
-/* Question rows (yes/no + multiple choice) */
+/* Question rows */
 
 .questionList {
   display: flex;
@@ -291,15 +291,15 @@
 }
 
 .pillActive {
-  background: var(--color-cta);
-  border-color: var(--color-cta);
+  background: #2D5A3D;
+  border-color: #2D5A3D;
   color: #fff;
   font-weight: 600;
 }
 
 .pillActive:hover {
-  background: var(--color-cta-hover);
-  border-color: var(--color-cta-hover);
+  background: #1e3d2a;
+  border-color: #1e3d2a;
   color: #fff;
 }
 
@@ -532,11 +532,12 @@
   flex: 1;
 }
 
+/* Continue / Submit — Forest: worker is already committed, just moving through */
 .submitBtn {
   font-family: var(--font-sans);
   font-size: 0.9375rem;
   font-weight: 600;
-  background: var(--color-cta);
+  background: #2D5A3D;
   color: #fff;
   border: none;
   border-radius: var(--radius-sm);
@@ -549,7 +550,7 @@
 }
 
 .submitBtn:hover {
-  background: var(--color-cta-hover);
+  background: #1e3d2a;
 }
 
 /* Step microcopy */
@@ -619,11 +620,12 @@
   margin-bottom: 12px;
 }
 
+/* Show all questions — Feldgrau: utility toggle, not forward progression */
 .toggleBtn {
   font-family: var(--font-sans);
   font-size: 0.9375rem;
   font-weight: 600;
-  background: var(--color-cta);
+  background: #4D615F;
   color: #fff;
   border: none;
   border-radius: var(--radius-sm);
@@ -634,7 +636,7 @@
 }
 
 .toggleBtn:hover {
-  background: var(--color-cta-hover);
+  background: #3d4e4c;
 }
 
 .questionMicrocopy {
@@ -680,12 +682,13 @@
   margin-top: 4px;
 }
 
+/* Read reviews CTA on confirmation — Forest: secondary action after submitting */
 .successCta {
   display: inline-block;
   font-family: var(--font-sans);
   font-size: 0.9375rem;
   font-weight: 600;
-  background: var(--color-cta);
+  background: #2D5A3D;
   color: #fff;
   border-radius: var(--radius-sm);
   padding: 13px 28px;
@@ -694,7 +697,10 @@
   letter-spacing: -0.01em;
   margin-top: 24px;
 }
-.successCta:hover { background: var(--color-cta-hover); }
+
+.successCta:hover {
+  background: #1e3d2a;
+}
 
 .retaliationNote {
   font-size: 0.8125rem;

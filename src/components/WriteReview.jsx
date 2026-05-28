@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import styles from './WriteReview.module.css'
 
 const TOTAL_STEPS = 4
@@ -209,6 +209,7 @@ const signalGroups = [
         id: 'benefits',
         text: 'Did you receive any benefits?',
         options: ['Yes', 'No', 'Not sure'],
+        microcopy: 'Health insurance, 401(k), paid time off, sick leave — anything beyond your hourly rate or tips.',
       },
       {
         id: 'uniforms',
@@ -252,7 +253,9 @@ const allSignalById = Object.fromEntries(
 )
 
 export default function WriteReview() {
+  const [searchParams] = useSearchParams()
   const [step, setStep] = useState(1)
+  const [venueName, setVenueName] = useState(searchParams.get('venue') || '')
   const [answers, setAnswers] = useState({})
   const [verification, setVerification] = useState('')
   const [showAll, setShowAll] = useState(false)
@@ -297,7 +300,12 @@ export default function WriteReview() {
           <div className={styles.successState}>
             <p className={styles.successHeading}>Appreciate you. Seriously.</p>
             <p className={styles.successBody}>Your review is anonymous and may help another professional make a smart choice.</p>
-            <Link to="/reviews" className={styles.successCta}>Read reviews</Link>
+            <Link
+              to="/reviews"
+              className={styles.successCta}
+            >
+              Read reviews
+            </Link>
           </div>
         ) : (
           <>
@@ -317,6 +325,8 @@ export default function WriteReview() {
                       className={styles.input}
                       type="text"
                       placeholder="Restaurant, bar, hotel..."
+                      value={venueName}
+                      onChange={e => setVenueName(e.target.value)}
                     />
                     <p className={styles.fieldHelper}>Use the name people would recognize.</p>
                   </div>
@@ -380,10 +390,10 @@ export default function WriteReview() {
 
             {step === 2 && (
               <>
-                <p className={styles.stepHelper}>Rate what you experienced — there's no wrong answer here. In the next step, you'll tell the story behind each one in your own words.</p>
+                <p className={styles.stepHelper}>Share what you experienced and skip what doesn't apply — your story comes next.</p>
 
                 <div className={styles.questionList}>
-                  {REQUIRED_ORDER.map((id, idx) => {
+                  {REQUIRED_ORDER.map((id) => {
                     const q = allSignalById[id]
                     return (
                       <div key={q.id} className={styles.signalQuestion}>
@@ -562,18 +572,17 @@ export default function WriteReview() {
                       <option value="profile">Link a public profile</option>
                     </select>
                   </div>
-                  <div className={styles.anonBlock}>
-                    <p className={styles.anonNote}>Your identity stays private. We only need your name and employer to verify your connection — everything else is automatically removed. Your review is published anonymously and never shared with your employer.</p>
-                  </div>
                   {verification && (
                     <p className={styles.verifyConfirm}>
-                      Thanks — this helps increase trust in your review.
+                      Perfect — trust is what makes this work, and you just added to it.
                     </p>
                   )}
+                  <div className={styles.anonBlock}>
+                    <p className={styles.anonNote}>A few minutes from now, someone looking at this place for the first time will read what you wrote.</p>
+                  </div>
                 </div>
               </fieldset>
             )}
-
 
             <div className={styles.navRow}>
               {step > 1 && (
@@ -583,10 +592,7 @@ export default function WriteReview() {
               )}
               <div className={styles.navSpacer} />
               {step < TOTAL_STEPS ? (
-                <button type="button" className={styles.submitBtn} onClick={() => {
-                  // TODO: restore required validation before production
-                  nextStep()
-                }}>
+                <button type="button" className={styles.submitBtn} onClick={nextStep}>
                   Continue
                 </button>
               ) : (
@@ -594,7 +600,6 @@ export default function WriteReview() {
                   Submit Review
                 </button>
               )}
-
             </div>
 
           </form>

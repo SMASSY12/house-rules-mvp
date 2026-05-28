@@ -1,0 +1,40 @@
+/* ============================================
+   House Rules — Color System
+   Generated: May 2026
+   Palette: Terracotta & Midnight
+   ============================================ */
+
+:root {
+
+  /* --- Brand Anchors --- */
+  --color-ember:       #8B2635;   /* Primary CTA · urgency · accountability */
+  --color-forest:      #2D5A3D;   /* Secondary CTA · trust · depth */
+  --color-midnight:    #1A1510;   /* Primary text · dark anchor */
+
+  /* --- Surfaces --- */
+  --color-parchment:   #F5F0E8;   /* Page background */
+  --color-walnut:      #5A3520;   /* Rich surface · depth */
+  --color-terracotta:  #B85C38;   /* Accent · warmth */
+
+  /* --- Functional --- */
+  --color-amber:       #C47A2A;   /* Mixed signal · warning (pills only — not buttons) */
+
+  /* --- Signal Pills (in-review use only) --- */
+  --signal-positive-bg:   #1e3d2a;
+  --signal-positive-text: #a8d5b5;
+  --signal-negative-bg:   #3d1a1a;
+  --signal-negative-text: #e8a5a5;
+  --signal-neutral-bg:    #2e2a24;
+  --signal-neutral-text:  #c8bfb0;
+
+}
+
+/* ============================================
+   WCAG Contrast (white text on color)
+   Ember      #8B2635 → 8.7:1  ✅ AAA
+   Forest     #2D5A3D → 8.0:1  ✅ AAA
+   Midnight   #1A1510 → 18.9:1 ✅ AAA
+   Walnut     #5A3520 → 10.7:1 ✅ AAA
+   Terracotta #B85C38 → 4.6:1  ✅ AA
+   Amber      #C47A2A → 3.4:1  ❌ Fail — decorative use only
+   ============================================ */
